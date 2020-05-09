@@ -178,6 +178,8 @@ public class Pun : MonoBehaviourPunCallbacks
                 };
                 PhotonNetwork.CreateRoom(roomname, roomOptions1);
                 break;
+            default:
+                break;
         }
     }
 

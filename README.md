@@ -1,16 +1,19 @@
-# Cavalry-Battle(仮)
+# Cavalry-Battle
 
 ## ソースコードの場所
 /Assets/Script/  
 
-## ゲームのデモムービー
+## 機能紹介動画
 /Movie/DemoMovie.mp4  
+
+## 対戦動画
+/Movie/BattleMovie.mp4  
 
 ## このゲームについて
 ファンタジー×騎馬戦がコンセプトの旗取り対戦ゲームです。現在1vs1に対応しています。  
 
 ## 起動方法
-/Gameフォルダ内のapkファイルをスマートフォンにインストールすることで遊ぶことができます。  
+/Gameフォルダ内の cavalry-battle-android.apk をスマートフォンにインストールすることで遊ぶことができます。  
 現在androidのみ対応しています。  
 手順は  
 1.apkファイルを端末のDownloadなどのフォルダにコピー  
@@ -30,7 +33,7 @@ Joystick Pack, DOTween(HOTween v2), PUN2-FREE アセットが必要です。ま�
 skillボタンでスキル(炎)発動、クールダウンあり  
 DoragonAttackボタンでドラゴンが攻撃  
 RiderAttackボタンでライダーが攻撃  
-RiderHuntでライダーが旗をとる動作をする  
+RiderHuntボタンでライダーが旗をとる動作をする  
 
 ## ゲームのルール
 オンラインマッチングモードでは制限時間内で旗を取り合い、最後に旗を多く持っているプレイヤーの勝利です。旗の数が同じ場合、引き分けとなります。  
