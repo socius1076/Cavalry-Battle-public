@@ -61,7 +61,7 @@ public class MainCamera : MonoBehaviour
         }
         transform.position += target.transform.position - TargetPos; //ターゲットが動いていたらそれに合わせる
         TargetPos = target.transform.position; //ターゲットの位置更新
-        if(Input.touchCount > 0)
+        if(Input.touchCount > 0) //スマートフォンの場合
         {
             Touch touch = Input.GetTouch(0);
             if(Input.touchCount > 1) //最初に左画面をタップした場合
@@ -75,14 +75,22 @@ public class MainCamera : MonoBehaviour
             if((touch.phase == TouchPhase.Moved) && (touch.position.x >= Screen.width / 2)) //右画面をタップした場合
             {
                 float InputX = touch.deltaPosition.x;
-                float InputY = touch.deltaPosition.y;
-                /*Vertical -= InputY;
+                /*float InputY = touch.deltaPosition.y;
+                Vertical -= InputY;
                 Vertical = Mathf.Clamp(Vertical, 20.0f, 60.0f);
                 if(Time.timeScale == 1.0f)
                 {
                     transform.eulerAngles = new Vector3(Vertical, transform.eulerAngles.y, 0.0f);
                 }*/
                 transform.RotateAround(TargetPos, Vector3.up, InputX * Time.deltaTime * 30.0f); //ターゲットを中心に回転
+            }
+        }
+        else if(Input.GetMouseButton(0)) //PCの場合
+        {
+            if(Input.mousePosition.x >= Screen.width / 2)
+            {
+                float InputX = Input.GetAxis("Mouse X");
+                transform.RotateAround(TargetPos, Vector3.up, InputX * Time.deltaTime * 400.0f);
             }
         }
     }
