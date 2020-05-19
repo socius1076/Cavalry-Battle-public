@@ -1,6 +1,4 @@
-﻿//FloatingJoystick修正
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class MyFloatingJoystick : Joystick

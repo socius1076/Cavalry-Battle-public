@@ -1,6 +1,4 @@
-﻿//メニュー画面
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using System.Collections;
@@ -47,10 +45,7 @@ public class OnlineMenu : MonoBehaviour
 
     private IEnumerator MatchingWait()
     {
-        while(pun.Ready == false)
-        {
-            yield return null;
-        }
+        while(!pun.Ready) yield return null;
         MenuButton.interactable = false;
         MatchingPanel.SetActive(false);
         CountdownPanel.SetActive(true);
@@ -66,18 +61,12 @@ public class OnlineMenu : MonoBehaviour
 
     private void Update()
     {
-        if(ReadyGame == false || Finish == true)
-        {
-            return;
-        }
+        if(ReadyGame == false || Finish == true) return;
         if(StartGame == false) //試合開始前カウントダウン
         {
             int DiffTime = (PhotonNetwork.ServerTimestamp - pun.StartTime) / 1000; //サーバの時間から試合時間を同期する
             int NowTime = (ReadyTime + Margin) - DiffTime;
-            if(NowTime > 3 || NowTime < 0)
-            {
-                return;
-            }
+            if(NowTime > 3 || NowTime < 0) return;
             CountdownText.text = NowTime.ToString();
             if(NowTime == 0)
             {
@@ -88,10 +77,7 @@ public class OnlineMenu : MonoBehaviour
         {
             int DiffTime = (PhotonNetwork.ServerTimestamp - pun.StartTime) / 1000;
             int NowTime = (MaxTime + ReadyTime + Margin) - DiffTime;
-            if(NowTime > 60 || NowTime < 0)
-            {
-                return;
-            }
+            if(NowTime > 60 || NowTime < 0) return;
             TimeText.text = NowTime.ToString();
             if(NowTime == 0)
             {
@@ -122,10 +108,7 @@ public class OnlineMenu : MonoBehaviour
         var hashtable = new ExitGames.Client.Photon.Hashtable();
         hashtable["Flag"] = pun.playerStatus.GetComponentInChildren<FlagStatus>().number; //自分の旗の数を送る
         PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
-        while(string.IsNullOrEmpty(pun.Judge) == true)
-        {
-            yield return null;
-        }
+        while(string.IsNullOrEmpty(pun.Judge)) yield return null;
         FinishPanel.SetActive(false);
         ResultPanel.SetActive(true);
         if(pun.Judge.Equals("Draw"))
@@ -143,7 +126,7 @@ public class OnlineMenu : MonoBehaviour
 
     private void MenuScreen()
     {
-        if(ActivePanel == false)
+        if(!ActivePanel)
         {
             Audio2d.Instance.Play("Ok");
             MenuPanel.SetActive(true);
@@ -152,11 +135,11 @@ public class OnlineMenu : MonoBehaviour
         else
         {
             Audio2d.Instance.Play("Cancel");
-            if(MenuPanel.activeSelf == true)
+            if(MenuPanel.activeSelf)
             {
                 MenuPanel.SetActive(false);
             }
-            if(ExitPanel.activeSelf == true)
+            if(ExitPanel.activeSelf)
             {
                 ExitPanel.SetActive(false);
             }

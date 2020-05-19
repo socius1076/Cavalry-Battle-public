@@ -1,6 +1,4 @@
-﻿//ゲームオーバー画面
-
-using UnityEngine;
+﻿using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 using Photon.Pun;
@@ -15,15 +13,11 @@ public class GameOverAnimator : MonoBehaviour
     private void Start()
     {
         _transform = text.transform;
-        Vector3 DefaultPos = _transform.localPosition; //初期位置
-        _transform.localPosition = new Vector3(0.0f, 320.0f, 0.0f); //上に移動
-        _transform.DOLocalMove(DefaultPos, 1.0f).SetEase(Ease.Linear).OnComplete(ShakeAnim); //アニメーション
-        DOVirtual.DelayedCall(5.0f, LoadSceneMethod); //コールバック
-    }
-
-    private void ShakeAnim() //シェイク
-    {
-        _transform.DOShakePosition(1.5f, 100.0f);
+        Vector3 DefaultPos = _transform.localPosition;
+        _transform.localPosition = new Vector3(0.0f, 320.0f, 0.0f);
+        _transform.DOLocalMove(DefaultPos, 1.0f).SetEase(Ease.Linear)
+            .OnComplete(() => _transform.DOShakePosition(1.5f, 100.0f));
+        DOVirtual.DelayedCall(5.0f, LoadSceneMethod);
     }
 
     private void LoadSceneMethod()

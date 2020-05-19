@@ -1,8 +1,6 @@
-﻿//Riderの攻撃 Animatorイベント呼び出し用
+﻿using UnityEngine;
 
-using UnityEngine;
-
-public class RiderAttack : MonoBehaviour
+public class RiderAttack : MonoBehaviour //Animatorイベント呼び出し用
 {
     private Attack attack = null;
 

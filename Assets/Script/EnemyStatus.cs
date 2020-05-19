@@ -1,6 +1,4 @@
-﻿//敵のステータス
-
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,7 +8,7 @@ public class EnemyStatus : ObjectStatus
 {
     private Collider _collider = null;
     private NavMeshAgent navMeshAgent = null;
-    private Appear appear = null;
+    private EnemyAppear enemyAppear = null;
 
     protected override void Start()
     {
@@ -18,7 +16,7 @@ public class EnemyStatus : ObjectStatus
         LifeGaugeContainer.Instance.Add(this);
         _collider = GetComponent<Collider>();
         navMeshAgent = GetComponent<NavMeshAgent>();
-        appear = GameObject.Find("AppearGate").GetComponent<Appear>();
+        enemyAppear = GameObject.Find("AppearGate").GetComponent<EnemyAppear>();
     }
 
     private void Update()
@@ -28,8 +26,8 @@ public class EnemyStatus : ObjectStatus
 
     protected override void Die()
     {
-        _collider.enabled = false;
         base.Die();
+        _collider.enabled = false;
         StartCoroutine(DestroyCoroutine());
     }
 
@@ -37,6 +35,6 @@ public class EnemyStatus : ObjectStatus
     {
         yield return new WaitForSeconds(2.0f);
         Destroy(gameObject);
-        appear.EnemyCount--;
+        enemyAppear.EnemyCount--;
     }
 }

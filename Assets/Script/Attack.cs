@@ -1,6 +1,4 @@
-﻿//攻撃
-
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using Photon.Pun;
 
@@ -18,156 +16,136 @@ public class Attack : MonoBehaviourPunCallbacks
     [SerializeField] private ParticleSystem _particleSystem = null;
     [SerializeField] private FlagStatus flagStatus = null;
     private ObjectStatus objectStatus = null;
-    public int flagcount = 0;
+    public int flagcount = 0; //トレーニングモード用変数
     
     private void Start()
     {
         objectStatus = GetComponent<ObjectStatus>();
     }
 
-    public void AttackIfPossible(int signal) //攻撃可能かどうか
+    public void AttackIfPossible(int signal)
     {
-        if(objectStatus.AttackAble == false)
-        {
-            return;
-        }
+        if(!objectStatus.AttackAble) return;
         objectStatus.GoAttack(signal);
         
     }
     
-    public void AttackRangeEnter(Collider collider) //プレイヤーが攻撃範囲に入った場合
+    public void AttackRangeEnter(Collider collider)
     {
         PlayerStatus playerStatus = collider.GetComponent<PlayerStatus>();
-        if(playerStatus.NowLife <= 0.0f)
-        {
-            return;
-        }
-        if(objectStatus.AttackAble == false) //連続攻撃防止
-        {
-            return;
-        }
+        if(playerStatus.NowLife <= 0.0f) return;
+        if(!objectStatus.AttackAble) return;
         StartCoroutine(StartCooldown());
     }
 
-    private void AttackStart() //攻撃開始
+    private void AttackStart()
     {
         OnRideColl.enabled = true;
         if(AttackSound != null)
         {
-            //AttackSound.pitch = Random.Range(0.9f, 1.0f);
             AttackSound.Play();
         }
     }
 
-    private void FinishAttack() //攻撃終了
+    private void FinishAttack()
     {
         OnRideColl.enabled = false;
         StartCoroutine(CooldownCoroutine());
     }
 
-    private void SkillStart() //スキル開始
+    private void SkillStart()
     {
-        _particleSystem.Play();
         SkillColl.enabled = true;
+        _particleSystem.Play();
         if(AttackSound != null)
         {
             AttackSound.Play();
         }
     }
 
-    private void SkillFinish() //スキル終了
+    private void SkillFinish()
     {
         SkillColl.enabled = false;
     }
 
-     public void RiderAttackStart() //乗り手攻撃開始
+     public void RiderAttackStart()
     {
         RiderColl.enabled = true;
         if(AttackSound != null)
         {
-            //AttackSound.pitch = Random.Range(0.9f, 1.0f);
             AttackSound.Play();
         }
     }
 
-    public void FinishRiderAttack() //乗り手攻撃終了
+    public void FinishRiderAttack()
     {
         RiderColl.enabled = false;
         StartCoroutine(CooldownCoroutine());
     }
 
-    public void HitAttack(Collider collider) //攻撃が当たった場合
+    public void HitAttack(Collider collider)
     {
         if(objectStatus.CompareTag("Player"))
         {
             PlayerStatus playerStatus = objectStatus.GetComponent<PlayerStatus>();
             if(playerStatus.pun.roomjudge == 0)
             {
-                if(photonView.IsMine == false) //実行中のphotonviewが自分かどうか判定,hp同期のためfalse
+                if(!photonView.IsMine) //実行中のphotonviewが自分かどうか判定,hp同期のためfalse
                 {
                     ObjectStatus Target = collider.GetComponent<ObjectStatus>();
-                    if(null == Target)
-                    {
-                        return;
-                    }
+                    if(Target == null) return;
                     Target.Damage(objectStatus.Attack);
                 }
             }
             else if(playerStatus.pun.roomjudge == 1)
             {
                 ObjectStatus Target = collider.GetComponent<ObjectStatus>();
-                if(null == Target)
-                {
-                    return;
-                }
+                if(Target == null) return;
                 Target.Damage(objectStatus.Attack);
             }
         }
         else
         {
             ObjectStatus Target = collider.GetComponent<ObjectStatus>();
-            if(null == Target)
-            {
-                return;
-            }
+            if(Target == null) return;
             Target.Damage(objectStatus.Attack);
         }
     }
 
-    public void HuntStart() //Hunt開始
+    public void HuntStart()
     {
         HuntColl.enabled = true;
     }
 
-    public void FinishHunt() //Hunt終了
+    public void FinishHunt()
     {
         HuntColl.enabled = false;
         StartCoroutine(CooldownCoroutine());
     }
 
-    public void HuntAttack(Collider collider) //Hunt成功した場合
+    public void HuntAttack(Collider collider)
     {
         if(collider.GetComponentInParent<ObjectStatus>().CompareTag("Enemy") == true)
         {
             flagStatus.FlagInc();
-            flagcount++; //トレーニングモード用変数
+            flagcount++;
             Destroy(collider.gameObject);
         }
         else
         {
-            if(photonView.IsMine == true)
+            if(photonView.IsMine)
             {
                 flagStatus.photonView.RPC("FlagInc", RpcTarget.All);
             }
             FlagStatus enemyflagStatus = collider.GetComponentInChildren<FlagStatus>();
-            if(enemyflagStatus.photonView.IsMine == false)
+            if(!enemyflagStatus.photonView.IsMine)
             {
                 enemyflagStatus.photonView.RPC("FlagDec", RpcTarget.All);
             }
         }
     }
 
-    private IEnumerator StartCooldown() //敵の攻撃開始前処理
+    private IEnumerator StartCooldown()
     {
         objectStatus.GoIdle();
         yield return new WaitForSeconds(IdelCoolDown);
@@ -175,7 +153,7 @@ public class Attack : MonoBehaviourPunCallbacks
         AttackIfPossible(0);
     }
 
-    private IEnumerator CooldownCoroutine() //攻撃後クールダウン
+    private IEnumerator CooldownCoroutine()
     {
         yield return new WaitForSeconds(AttackCoolDown);
         objectStatus.GoNormal();

@@ -10833,7 +10833,7 @@ GameObject:
   - component: {fileID: 6250999388113993465}
   - component: {fileID: 6250999388113993471}
   m_Layer: 9
-  m_Name: Doragon
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

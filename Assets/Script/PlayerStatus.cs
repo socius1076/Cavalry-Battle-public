@@ -1,6 +1,4 @@
-﻿//ステータス
-
-using Photon.Pun;
+﻿using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -31,30 +29,17 @@ public class PlayerStatus : ObjectStatus, IPunObservable
 
     public override void Damage(float damage)
     {
-        if(stateEnum == StateEnum.Die)
-        {
-            return;
-        }
-        if(Hit == true)
-        {
-            return;
-        }
+        if(stateEnum == StateEnum.Die) return;
+        if(Hit) return;
         if(pun.roomjudge == 0)
         {
             NowLife -= damage;
         }
-        else if(pun.roomjudge == 1) //トレーニングの場合無敵状態
-        {
-            //NowLife -= damage;
-        }
-        if(photonView.IsMine == true)
+        if(photonView.IsMine)
         {
             photonView.RPC("DamageRPC", RpcTarget.All);
         }
-        if(NowLife > 0.0f)
-        {
-            return;
-        }
+        if(NowLife > 0.0f) return;
         LiveState = false;
         stateEnum = StateEnum.Die;
         animator.SetTrigger("Die");
@@ -75,10 +60,7 @@ public class PlayerStatus : ObjectStatus, IPunObservable
 
     private IEnumerator DamageHit() //無敵状態
     {
-        if(NowLife <= 0.0f)
-        {
-            yield break;
-        }
+        if(NowLife <= 0.0f) yield break;
         Hit = true;
         for(int i = 0; i < 5; i++)
         {
@@ -93,9 +75,8 @@ public class PlayerStatus : ObjectStatus, IPunObservable
         stateEnum = StateEnum.Normal;
     }
 
-    private IEnumerator Stan() //スタン状態
+    private IEnumerator Stan()
     {
-        //PlayerPrefs.DeleteAll();
         yield return new WaitForSeconds(3.0f);
         if(pun.roomjudge == 0)
         {
@@ -103,19 +84,12 @@ public class PlayerStatus : ObjectStatus, IPunObservable
             LiveState = true;
             NowLife = MaxLife;
         }
-        else if(pun.roomjudge == 1)
-        {
-            /*stateEnum = StateEnum.Normal;
-            LiveState = true;
-            NowLife = MaxLife;
-            LifeGaugeContainer.Instance.Add(this);*/
-        }
-        //SceneManager.LoadScene("GameOverScene");
+        //SceneManager.LoadScene("GameOverScene"); //未実装
     }
 
     private void OnTriggerEnter(Collider coll)
     {
-        if(coll.CompareTag("Item") == true)
+        if(coll.CompareTag("Item"))
         {
             _particleSystem.Play();
         }
@@ -123,10 +97,7 @@ public class PlayerStatus : ObjectStatus, IPunObservable
 
     public override void GoAttack(int signal)
     {
-        if(AttackAble == false)
-        {
-            return;
-        }
+        if(!AttackAble) return;
         switch(signal)
         {
             case 0:
@@ -142,10 +113,7 @@ public class PlayerStatus : ObjectStatus, IPunObservable
                 rideranimator.SetTrigger("Hunt");
                 break;
             case 3:
-                if(SkillState == true)
-                {
-                    return;
-                }
+                if(SkillState) return;
                 SkillState = true;
                 StartCoroutine(SkillStatus());
                 stateEnum = StateEnum.Attack;
@@ -178,7 +146,7 @@ public class PlayerStatus : ObjectStatus, IPunObservable
 
     public void JumpAction()
     {
-        if(LiveState == true)
+        if(LiveState)
         {
             photonView.RPC("Jump", RpcTarget.All);
         }
@@ -188,7 +156,7 @@ public class PlayerStatus : ObjectStatus, IPunObservable
     {
         if(collider.CompareTag("Wall"))
         {
-            if(photonView.IsMine == true)
+            if(photonView.IsMine)
             {
                 Damage(3.0f);
             }

@@ -1,6 +1,4 @@
-﻿//ライフゲージ
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(RectTransform))]
@@ -18,7 +16,7 @@ public class LifeGauge : MonoBehaviour
     private void Start()
     {
         playernameText = Instantiate(playernamePrefab, transform);
-        if(objectStatus.CompareTag("Enemy") == false)
+        if(!objectStatus.CompareTag("Enemy"))
         {
             OnRideController onRideController = objectStatus.GetComponent<OnRideController>();
             playernameText.text = onRideController.playername;
@@ -28,10 +26,7 @@ public class LifeGauge : MonoBehaviour
 
     private void Update()
     {
-        if(mainCamera.CameraOk == false)
-        {
-            return;
-        }
+        if(!mainCamera.CameraOk) return;
         if(objectStatus == null)
         {
             Destroy(this.gameObject);

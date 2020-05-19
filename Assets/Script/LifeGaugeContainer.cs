@@ -1,6 +1,4 @@
-﻿//ライフゲージ管理
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
 
@@ -8,24 +6,21 @@ using System;
 
 public class LifeGaugeContainer : MonoBehaviour
 {
-    private static LifeGaugeContainer instance; //private static 一つしか存在しない
+    private static LifeGaugeContainer instance;
 
     public static LifeGaugeContainer Instance //インスタンスを返す
     {
-        get
-        {
-            return instance;
-        }
+        get { return instance; }
     }
 
     [SerializeField] private Camera MainCamera = null;
     [SerializeField] private LifeGauge lifeGaugePrefab = null;
     private RectTransform rectTransform;
-    private readonly Dictionary<ObjectStatus, LifeGauge> stateLifeBarMap = new Dictionary<ObjectStatus, LifeGauge>(); //代入不可 連想配列
+    private readonly Dictionary<ObjectStatus, LifeGauge> stateLifeBarMap = new Dictionary<ObjectStatus, LifeGauge>();
     
     private void Awake()
     {
-        if(null != instance)
+        if(instance != null)
         {
             throw new Exception("LifeBarContainer instance already exists.");
         }

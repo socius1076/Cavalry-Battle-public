@@ -1,6 +1,4 @@
-﻿//カメラ制御
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using Photon.Pun;
 
@@ -10,7 +8,6 @@ public class MainCamera : MonoBehaviour
 {
     public GameObject target = null;
     private Vector3 TargetPos = Vector3.zero;
-    //private Vector3 Offset = new Vector3(5.0f, 4.0f, 0.0f);
     private Pun pun = null;
     public bool CameraOk = false;
     //private float Vertical = 0;
@@ -23,26 +20,25 @@ public class MainCamera : MonoBehaviour
 
     private IEnumerator WaitTime()
     {
-        while(PhotonNetwork.InRoom == false)
+        while(!PhotonNetwork.InRoom)
         {
             yield return null;
         }
         TargetPos = target.transform.position;
-        if(pun.EntryNumber % 2 == 0) //見る位置を決める
+        switch(pun.EntryNumber) //見る位置を決める
         {
-            transform.Rotate(new Vector3(30.0f, 90.0f, 0.0f));
-            transform.position = TargetPos + new Vector3(-5.0f, 4.0f, 0.0f);
+            case 1:
+                transform.Rotate(new Vector3(30.0f, -90.0f, 0.0f));
+                transform.position = TargetPos + new Vector3(5.0f, 4.0f, 0.0f);
+                break;
+            case 2:
+                transform.Rotate(new Vector3(30.0f, 90.0f, 0.0f));
+                transform.position = TargetPos + new Vector3(-5.0f, 4.0f, 0.0f);
+                break;
+            default:
+                break;
         }
-        else
-        {
-            transform.Rotate(new Vector3(30.0f, -90.0f, 0.0f));
-            transform.position = TargetPos + new Vector3(5.0f, 4.0f, 0.0f);
-        }
-        if(pun.roomjudge == 0)
-        {
-
-        }
-        else if(pun.roomjudge == 1)
+        if(pun.roomjudge == 1)
         {
             TrainingMenu trainingMenu = GameObject.Find("MenuCanvas").GetComponent<TrainingMenu>();
             trainingMenu.LoadOk();
@@ -55,11 +51,8 @@ public class MainCamera : MonoBehaviour
 
     private void Update()
     {
-        if(CameraOk == false || target == null)
-        {
-            return;
-        }
-        transform.position += target.transform.position - TargetPos; //ターゲットが動いていたらそれに合わせる
+        if(CameraOk == false || target == null) return;
+        transform.position += target.transform.position - TargetPos; //ターゲットが動いていたら合わせる
         TargetPos = target.transform.position; //ターゲットの位置更新
         if(Input.touchCount > 0) //スマートフォンの場合
         {
@@ -75,7 +68,7 @@ public class MainCamera : MonoBehaviour
             if((touch.phase == TouchPhase.Moved) && (touch.position.x >= Screen.width / 2)) //右画面をタップした場合
             {
                 float InputX = touch.deltaPosition.x;
-                /*float InputY = touch.deltaPosition.y;
+                /*float InputY = touch.deltaPosition.y; //垂直移動
                 Vertical -= InputY;
                 Vertical = Mathf.Clamp(Vertical, 20.0f, 60.0f);
                 if(Time.timeScale == 1.0f)

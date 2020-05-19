@@ -1,6 +1,4 @@
-﻿//メニュー画面
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
@@ -42,7 +40,7 @@ public class TrainingMenu : MonoBehaviour
 
     private void MenuScreen()
     {
-        if(ActivePanel == false)
+        if(!ActivePanel)
         {
             Audio2d.Instance.Play("Ok");
             MenuPanel.SetActive(true);
@@ -51,15 +49,15 @@ public class TrainingMenu : MonoBehaviour
         else
         {
             Audio2d.Instance.Play("Cancel");
-            if(MenuPanel.activeSelf == true)
+            if(MenuPanel.activeSelf)
             {
                 MenuPanel.SetActive(false);
             }
-            if(PausePanel.activeSelf == true)
+            if(PausePanel.activeSelf)
             {
                 PausePanel.SetActive(false);
             }
-            if(ExitPanel.activeSelf == true)
+            if(ExitPanel.activeSelf)
             {
                 ExitPanel.SetActive(false);
             }

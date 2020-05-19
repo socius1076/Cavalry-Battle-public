@@ -1,6 +1,4 @@
-﻿//ネットワーク管理
-
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
@@ -38,20 +36,17 @@ public class Pun : MonoBehaviourPunCallbacks
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        if(PhotonNetwork.IsMasterClient == true)
+        if(PhotonNetwork.IsMasterClient)
         {
-            if(Ready == true) //試合が開始している場合
+            if(Ready) //試合が開始している場合
             {
-                if(changedProps.TryGetValue("Start", out object StartObject) == true)
+                if(changedProps.TryGetValue("Start", out object StartObject))
                 {
                     StartTime = (int)StartObject;
                 }
-                if(changedProps.TryGetValue("Flag", out object FlagObject) == true)
+                if(changedProps.TryGetValue("Flag", out object FlagObject))
                 {
-                    if(string.IsNullOrEmpty(Judge) == false) //連続で呼ばれないようにする
-                    {
-                        return;
-                    }
+                    if(!string.IsNullOrEmpty(Judge)) return; //連続で呼ばれないようにする
                     int judge = 0;
                     foreach(var Member in PhotonNetwork.PlayerList)
                     {
@@ -80,7 +75,7 @@ public class Pun : MonoBehaviourPunCallbacks
                                 draw = true;
                             }
                         }
-                        if(draw == true) //引き分けかそうでないか
+                        if(draw) //引き分けかそうでないか
                         {
                             var hashtable = new ExitGames.Client.Photon.Hashtable();
                             hashtable["Win"] = "Draw";
@@ -94,21 +89,18 @@ public class Pun : MonoBehaviourPunCallbacks
                         }
                     }
                 }
-                if(changedProps.TryGetValue("Win", out object WinObject) == true)
+                if(changedProps.TryGetValue("Win", out object WinObject))
                 {
                     Judge = (string)WinObject;
                 }
             }
             else
             {
-                if(changedProps.TryGetValue("Go", out object GoObject) == true)
+                if(changedProps.TryGetValue("Go", out object GoObject))
                 {
                     Ready = (bool)GoObject;
                 }
-                if(Ready == true)
-                {
-                    return;
-                }
+                if(Ready) return;
                 int judge = 0;
                 foreach(var Member in PhotonNetwork.PlayerList)
                 {
@@ -127,15 +119,15 @@ public class Pun : MonoBehaviourPunCallbacks
         }
         else
         {
-            if(changedProps.TryGetValue("Go", out object GoObject) == true)
+            if(changedProps.TryGetValue("Go", out object GoObject))
             {
                 Ready = (bool)GoObject;
             }
-            if(changedProps.TryGetValue("Start", out object StartObject) == true)
+            if(changedProps.TryGetValue("Start", out object StartObject))
             {
                 StartTime = (int)StartObject;
             }
-            if(changedProps.TryGetValue("Win", out object WinObject) == true)
+            if(changedProps.TryGetValue("Win", out object WinObject))
             {
                 Judge = (string)WinObject;
             }
@@ -226,11 +218,11 @@ public class Pun : MonoBehaviourPunCallbacks
         {
             Vector3 Position = StartPosition();
             Quaternion Direction = StartQuaternion();
-            player = PhotonNetwork.Instantiate("Doragon", Position, Direction);
+            player = PhotonNetwork.Instantiate("Player", Position, Direction);
         }
         else if(roomjudge == 1)
         {
-            player = PhotonNetwork.Instantiate("Doragon", Vector3.zero, Quaternion.Euler(0.0f, -90.0f, 0.0f));
+            player = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.Euler(0.0f, -90.0f, 0.0f));
         }
         Attack playerattack = player.GetComponent<Attack>();
         OnRideController onRideController = player.GetComponent<OnRideController>();
@@ -246,13 +238,9 @@ public class Pun : MonoBehaviourPunCallbacks
         MyFloatingJoystick myFloatingJoystick = GameObject.Find("Floating Joystick").GetComponent<MyFloatingJoystick>();
         onRideController.joystick = myFloatingJoystick;
         playerStatus.pun = this;
-        if(roomjudge == 0)
+        if(roomjudge == 1)
         {
-            
-        }
-        else if(roomjudge == 1)
-        {
-            Appear appear = GameObject.Find("AppearGate").GetComponent<Appear>();
+            EnemyAppear appear = GameObject.Find("AppearGate").GetComponent<EnemyAppear>();
             appear.playerStatus = playerStatus;
         }
     }

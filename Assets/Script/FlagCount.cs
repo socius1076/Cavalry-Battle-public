@@ -1,6 +1,4 @@
-﻿//旗の数
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Text))]
@@ -19,10 +17,7 @@ public class FlagCount : MonoBehaviour
 
     private void Update()
     {
-        if(attack == null || flagStatus == null)
-        {
-            return;
-        }
+        if(attack == null || flagStatus == null) return;
         if(pun.roomjudge == 0)
         {
             flagtext.text = "Flag : " + flagStatus.number + "個";

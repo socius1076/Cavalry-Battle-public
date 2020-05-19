@@ -1,15 +1,13 @@
-﻿//プレイヤー制御
-
-using UnityEngine;
+﻿using UnityEngine;
 using Photon.Pun;
 
 public class OnRideController : MonoBehaviourPunCallbacks
 {
-    const float RotationSpeed = 360.0f; //回転速度
-    private float JumpPower = 300.0f; //ジャンプ力
-    public float Velocity = 15.0f; //速度
-    private Vector3 MoveVelocity = Vector3.zero; //移動速度情報
-    private float Xpos,Zpos; //移動速度格納
+    const float RotationSpeed = 360.0f;
+    private float JumpPower = 300.0f;
+    public float Velocity = 15.0f;
+    private Vector3 MoveVelocity = Vector3.zero;
+    private float Xpos,Zpos;
     private Rigidbody _rigidbody;
     private Transform _transform;
     private Animator animator = null;
@@ -23,9 +21,9 @@ public class OnRideController : MonoBehaviourPunCallbacks
     {
         get
         {
-            Vector3 Pos = _transform.position + new Vector3(0.0f, 1.0f, 0.0f); //位置取得
+            Vector3 Pos = _transform.position + new Vector3(0.0f, 1.0f, 0.0f);
             RaycastHit raycastHit;
-            if(Physics.SphereCast(Pos, 1.0f, Vector3.down, out raycastHit, 0.01f) == true) //球状のrayを飛ばす
+            if(Physics.SphereCast(Pos, 1.0f, Vector3.down, out raycastHit, 0.01f)) //球状のrayを飛ばす
             {
                 return true;
             }
@@ -46,7 +44,7 @@ public class OnRideController : MonoBehaviourPunCallbacks
         playername = photonView.Owner.NickName;
     }
 
-    private void Update() //入力処理
+    private void Update()
     {
         if(playerStatus.LiveState == true && photonView.IsMine == true)
         {
@@ -60,12 +58,12 @@ public class OnRideController : MonoBehaviourPunCallbacks
         }
     }
 
-    private void FixedUpdate() //物理処理
+    private void FixedUpdate()
     {
-        if(playerStatus.LiveState == true)
+        if(playerStatus.LiveState)
         {
             Vector3 cameraForward = Vector3.Scale(_camera.transform.forward, new Vector3(1.0f, 0.0f, 1.0f)).normalized; //カメラの向きからx-z平面の単位ベクトルを得る
-            if (IsGrounded == true) 
+            if (IsGrounded) 
             {
                 MoveVelocity.y = 0.0f; //接地時はyベクトル0
                 animator.SetFloat("MoveSpeed", new Vector3(MoveVelocity.x, 0.0f, MoveVelocity.z).magnitude);
@@ -82,7 +80,7 @@ public class OnRideController : MonoBehaviourPunCallbacks
         }
     }
 
-    /*void OnDrawGizmos() //rayの形状確認
+    /*void OnDrawGizmos() //DEBUG rayの形状確認
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position + new Vector3(0.0f, 1.0f, 0.0f), 1.0f);
@@ -90,7 +88,7 @@ public class OnRideController : MonoBehaviourPunCallbacks
 
     [PunRPC] public void Jump()
     {
-        if(IsGrounded == true)
+        if(IsGrounded)
         {
             _rigidbody.AddForce(JumpPower * Vector3.up);
         }

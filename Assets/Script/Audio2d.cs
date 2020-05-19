@@ -1,6 +1,4 @@
-﻿//2dAudio
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
 
@@ -10,19 +8,16 @@ public class Audio2d : MonoBehaviour
 {
     private static Audio2d instance = null;
     [SerializeField] private AudioSource audioSource = null;
-    private readonly Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>(); //代入不可 連想配列
+    private readonly Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>();
 
     public static Audio2d Instance //インスタンスを返す
     {
-        get 
-        {
-            return instance;
-        }
+        get { return instance; }
     }
 
     private void Awake()
     {
-        if(null != instance)
+        if(instance != null)
         {
             Destroy(gameObject); //既にインスタンスがある場合は自分を破棄する
             return;
@@ -38,11 +33,11 @@ public class Audio2d : MonoBehaviour
 
     public void Play(string clipname) //指定した名前の音楽ファイル再生
     {
-        if(clips.ContainsKey(clipname) == false) //存在しない名前を指定した場合エラー
+        if(!clips.ContainsKey(clipname)) //存在しない名前を指定した場合エラー
         {
             throw new Exception("Sound" + clipname + "is not defined");
         }
-        audioSource.clip = clips[clipname]; //差し替える
+        audioSource.clip = clips[clipname];
         audioSource.Play();
     }
 }

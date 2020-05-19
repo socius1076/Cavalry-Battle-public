@@ -1,6 +1,4 @@
-﻿//旗の状態
-
-using UnityEngine;
+﻿using UnityEngine;
 using Photon.Pun;
 
 [RequireComponent(typeof(Collider))]
@@ -46,17 +44,14 @@ public class FlagStatus : MonoBehaviourPunCallbacks
 
     private void Drop()
     {
-        if(dropjudge == true) //呼ばれてから一度だけ実行
-        {
-            return;
-        }
+        if(dropjudge) return;
         dropjudge = true;
-        if(photonView.IsMine == true)
+        if(photonView.IsMine)
         {
             int numcache = number;
             for(int i = 0; i < numcache; i++)
             {
-                Flag flag = PhotonNetwork.Instantiate("Flag", playerPos.position, Quaternion.identity).GetComponent<Flag>();
+                FlagDrop flag = PhotonNetwork.Instantiate("Flag", playerPos.position, Quaternion.identity).GetComponent<FlagDrop>();
                 flag.Initialize(playerPos);
                 photonView.RPC("FlagDec", RpcTarget.All);
             }

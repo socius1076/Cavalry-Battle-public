@@ -1,12 +1,10 @@
-﻿//落とした旗処理
-
-using UnityEngine;
+﻿using UnityEngine;
 using DG.Tweening;
 using Photon.Pun;
 
 [RequireComponent(typeof(Collider))]
 
-public class Flag : MonoBehaviourPunCallbacks
+public class FlagDrop : MonoBehaviourPunCallbacks
 {
     private Vector3 DropPosition = Vector3.zero;
 
@@ -23,10 +21,7 @@ public class Flag : MonoBehaviourPunCallbacks
             Ray ray = new Ray(DropPosition, new Vector3(0.0f, -1.0f, 0.0f));
             if(Physics.Raycast(ray, out RaycastHit hit, 5.0f))
             {
-                if(hit.collider.tag == "Floor")
-                {
-                    break;
-                }
+                if(hit.collider.tag == "Floor") break;
             }
         }
         _transform.DOScale(DefaultScale, 0.5f);
@@ -42,10 +37,7 @@ public class Flag : MonoBehaviourPunCallbacks
 
     private void OnTriggerEnter(Collider collider)
     {
-        if(collider.CompareTag("Player") == false)
-        {
-            return;
-        }
+        if(!collider.CompareTag("Player")) return;
         FlagStatus flagStatus = collider.GetComponentInChildren<FlagStatus>();
         if(flagStatus.photonView.IsMine)
         {

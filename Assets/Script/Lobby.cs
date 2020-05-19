@@ -1,6 +1,4 @@
-﻿//ロビー
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Photon.Pun;
@@ -35,7 +33,7 @@ public class Lobby : MonoBehaviour
 
     private void Update()
     {
-        if(pun.maxroom == true)
+        if(pun.maxroom)
         {
             onlineButton.interactable = false;
         }
@@ -63,7 +61,7 @@ public class Lobby : MonoBehaviour
 
     private void Title()
     {
-        if(ActivePanel == false)
+        if(!ActivePanel)
         {
             Audio2d.Instance.Play("Ok");
             TitlePanel.SetActive(true);
@@ -72,7 +70,7 @@ public class Lobby : MonoBehaviour
         else
         {
             Audio2d.Instance.Play("Cancel");
-            if(TitlePanel.activeSelf == true)
+            if(TitlePanel.activeSelf)
             {
                 TitlePanel.SetActive(false);
             }

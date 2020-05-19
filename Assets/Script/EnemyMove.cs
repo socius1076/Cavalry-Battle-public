@@ -1,6 +1,4 @@
-﻿//敵を動かす
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -19,26 +17,23 @@ public class EnemyMove : MonoBehaviour
         enemyStatus = GetComponent<EnemyStatus>();
     }
 
-    public void OnDetectObject(Collider collider) //CollisionDetectorに呼ばれるメソッド
+    public void OnDetectObject(Collider collider)
     {
-        if(enemyStatus.MoveAble == false)
+        if(!enemyStatus.MoveAble)
         {
             navMeshAgent.isStopped = true;
             return;
         }
-        if(collider.CompareTag("Player") == true)
+        if(collider.CompareTag("Player"))
         {
             PlayerStatus playerStatus = collider.GetComponent<PlayerStatus>();
-            if(playerStatus.NowLife <= 0.0)
-            {
-                return;
-            }
+            if(playerStatus.NowLife <= 0.0) return;
             Vector3 TransformDiff = collider.transform.position - transform.position; //座標の差を格納する変数
             float Distance = TransformDiff.magnitude; //対象との距離を格納する変数
             Vector3 Direction = TransformDiff.normalized; //対象への方向を格納する変数
             int HitCount = Physics.RaycastNonAlloc(transform.position, Direction, HitObject, Distance, layerMask); //ヒットしたオブジェクトの情報を格納する変数
 
-            /*Ray ray = new Ray(transform.position,TransformDiff);
+            /*Ray ray = new Ray(transform.position,TransformDiff); //DEBUG
             Debug.DrawRay(transform.position,TransformDiff,Color.red); //rayの可視化
             Physics.Raycast(ray, out RaycastHit hit);
             Debug.Log("HitCount" + HitCount + "   " + hit.collider.gameObject.name); //オブジェクト数確認*/

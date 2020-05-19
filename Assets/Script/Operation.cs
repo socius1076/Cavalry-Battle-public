@@ -1,6 +1,4 @@
-﻿//キャラクター操作
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class Operation : MonoBehaviour
@@ -24,10 +22,7 @@ public class Operation : MonoBehaviour
 
     private void Update()
     {
-        if(playerStatus == null)
-        {
-            return;
-        }
+        if(playerStatus == null) return;
         if(playerStatus.SkillState == true) //スキルのクールダウン処理
         {
             SkillButton.interactable = false;

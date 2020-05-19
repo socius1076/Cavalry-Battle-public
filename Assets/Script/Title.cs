@@ -1,6 +1,4 @@
-﻿//スタート画面
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class Title : MonoBehaviour
