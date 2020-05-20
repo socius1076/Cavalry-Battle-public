@@ -48,7 +48,7 @@ public abstract class ObjectStatus : MonoBehaviourPunCallbacks
 
     public virtual void GoAttack(int signal)
     {
-        if(AttackAble == false) return;
+        if(!AttackAble) return;
         switch(signal) //今後追加
         {
             case 0:

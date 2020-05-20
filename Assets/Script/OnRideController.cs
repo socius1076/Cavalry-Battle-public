@@ -46,7 +46,7 @@ public class OnRideController : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if(playerStatus.LiveState == true && photonView.IsMine == true)
+        if(playerStatus.LiveState && photonView.IsMine)
         {
             Xpos = joystick.Horizontal;
             Zpos = joystick.Vertical;

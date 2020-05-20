@@ -25,7 +25,7 @@ public class Pun : MonoBehaviourPunCallbacks
 
     private IEnumerator Start()
     {
-        while(namecheck == false) //名前が決定するまで待機
+        while(!namecheck) //名前が決定するまで待機
         {
             yield return new WaitForSeconds(1.0f);
         }
@@ -47,15 +47,15 @@ public class Pun : MonoBehaviourPunCallbacks
                 if(changedProps.TryGetValue("Flag", out object FlagObject))
                 {
                     if(!string.IsNullOrEmpty(Judge)) return; //連続で呼ばれないようにする
-                    int judge = 0;
+                    int membercount = 0;
                     foreach(var Member in PhotonNetwork.PlayerList)
                     {
                         if(Member.CustomProperties["Flag"] != null)
                         {
-                            judge++;
+                            membercount++;
                         }
                     }
-                    if(judge == maxmember) //全員の処理を受け取ったら
+                    if(membercount == maxmember) //全員の処理を受け取ったら
                     {
                         int max = 0;
                         string name = "";
@@ -70,7 +70,7 @@ public class Pun : MonoBehaviourPunCallbacks
                         }
                         foreach(var Member in PhotonNetwork.PlayerList)
                         {
-                            if((int)Member.CustomProperties["Flag"] == max && Member.NickName.Equals(name) == false)
+                            if((int)Member.CustomProperties["Flag"] == max && !Member.NickName.Equals(name))
                             {
                                 draw = true;
                             }
@@ -101,15 +101,15 @@ public class Pun : MonoBehaviourPunCallbacks
                     Ready = (bool)GoObject;
                 }
                 if(Ready) return;
-                int judge = 0;
+                int membercount = 0;
                 foreach(var Member in PhotonNetwork.PlayerList)
                 {
                     if(Member.CustomProperties["Ready"] != null)
                     {
-                        judge++;
+                        membercount++;
                     }
                 }
-                if(judge == maxmember)
+                if(membercount == maxmember)
                 {
                     var hashtable = new ExitGames.Client.Photon.Hashtable();
                     hashtable["Go"] = true;
@@ -282,8 +282,12 @@ public class Pun : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         var hashtable = new ExitGames.Client.Photon.Hashtable();
-        hashtable["Go"] = null;
         hashtable["Ready"] = null;
+        hashtable["Go"] = null;
+        hashtable["Start"] = null;
+        hashtable["Flag"] = null;
+        hashtable["Win"] = null;
+        PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
         Ready = false;
         Judge = "";
     }

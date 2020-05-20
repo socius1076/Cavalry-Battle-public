@@ -61,8 +61,8 @@ public class OnlineMenu : MonoBehaviour
 
     private void Update()
     {
-        if(ReadyGame == false || Finish == true) return;
-        if(StartGame == false) //試合開始前カウントダウン
+        if(!ReadyGame || Finish) return;
+        if(!StartGame) //試合開始前カウントダウン
         {
             int DiffTime = (PhotonNetwork.ServerTimestamp - pun.StartTime) / 1000; //サーバの時間から試合時間を同期する
             int NowTime = (ReadyTime + Margin) - DiffTime;
