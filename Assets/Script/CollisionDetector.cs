@@ -9,17 +9,20 @@ public class CollisionDetector : MonoBehaviour
     [SerializeField] private TriggerEvent triggerEventEnter = new TriggerEvent();
     [SerializeField] private TriggerEvent triggerEventStay = new TriggerEvent();
     
-    private void OnTriggerEnter(Collider coll) //他のコライダーに重なったときに呼ばれる
+    //他のコライダーに重なったときに呼ばれる
+    private void OnTriggerEnter(Collider coll)
     {
         triggerEventEnter.Invoke(coll);
     }
 
-    private void OnTriggerStay(Collider coll) //他のコライダーに触れ続けている間に呼ばれる
+    //他のコライダーに触れ続けている間に呼ばれる
+    private void OnTriggerStay(Collider coll)
     {
         triggerEventStay.Invoke(coll);
     }
 
-    [Serializable] private class TriggerEvent:UnityEvent<Collider> //コールバック関数処理
+    //コールバック関数処理
+    [Serializable] private class TriggerEvent:UnityEvent<Collider>
     {
         
     }

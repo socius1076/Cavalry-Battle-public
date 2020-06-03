@@ -24,7 +24,8 @@ public class PlayerStatus : ObjectStatus, IPunObservable
 
     public void LifeGaugeAdd()
     {
-        LifeGaugeContainer.Instance.Add(this); //インスタンスを代入
+        //インスタンスを代入
+        LifeGaugeContainer.Instance.Add(this);
     }
 
     public override void Damage(float damage)
@@ -58,7 +59,8 @@ public class PlayerStatus : ObjectStatus, IPunObservable
         StartCoroutine(Stan());
     }
 
-    private IEnumerator DamageHit() //無敵状態
+    //無敵状態
+    private IEnumerator DamageHit()
     {
         if(NowLife <= 0.0f) yield break;
         Hit = true;
@@ -84,7 +86,8 @@ public class PlayerStatus : ObjectStatus, IPunObservable
             LiveState = true;
             NowLife = MaxLife;
         }
-        //SceneManager.LoadScene("GameOverScene"); //未実装
+        //未実装
+        //SceneManager.LoadScene("GameOverScene");
     }
 
     private void OnTriggerEnter(Collider coll)
@@ -132,14 +135,18 @@ public class PlayerStatus : ObjectStatus, IPunObservable
         SkillState = false;
     }
 
+    //HPの同期(オブジェクト同期)
     void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+        //自身の生成したオブジェクトの場合
         if(stream.IsWriting)
         {
+            //データ送信
             stream.SendNext(NowLife);
         }
         else
         {
+            //データ受信
             NowLife = (float)stream.ReceiveNext();
         }
     }

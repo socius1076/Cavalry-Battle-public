@@ -14,11 +14,14 @@ public abstract class ObjectStatus : MonoBehaviourPunCallbacks
     public float MaxLife = 5.0f;
     public float Attack = 1.0f;
     protected Animator animator = null;
-    public StateEnum stateEnum = StateEnum.Normal; //初期状態
+    //初期状態
+    public StateEnum stateEnum = StateEnum.Normal;
 
-    public bool MoveAble => StateEnum.Normal == stateEnum; //移動可能かどうか
+    //移動可能かどうか
+    public bool MoveAble => StateEnum.Normal == stateEnum;
 
-    public bool AttackAble => StateEnum.Normal == stateEnum; //攻撃可能かどうか
+    //攻撃可能かどうか
+    public bool AttackAble => StateEnum.Normal == stateEnum;
 
     protected virtual void Start()
     {
@@ -49,7 +52,8 @@ public abstract class ObjectStatus : MonoBehaviourPunCallbacks
     public virtual void GoAttack(int signal)
     {
         if(!AttackAble) return;
-        switch(signal) //今後追加
+        //今後追加
+        switch(signal)
         {
             case 0:
                 stateEnum = StateEnum.Attack;

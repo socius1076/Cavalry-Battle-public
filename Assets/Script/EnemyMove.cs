@@ -28,20 +28,29 @@ public class EnemyMove : MonoBehaviour
         {
             PlayerStatus playerStatus = collider.GetComponent<PlayerStatus>();
             if(playerStatus.NowLife <= 0.0) return;
-            Vector3 TransformDiff = collider.transform.position - transform.position; //座標の差を格納する変数
-            float Distance = TransformDiff.magnitude; //対象との距離を格納する変数
-            Vector3 Direction = TransformDiff.normalized; //対象への方向を格納する変数
-            int HitCount = Physics.RaycastNonAlloc(transform.position, Direction, HitObject, Distance, layerMask); //ヒットしたオブジェクトの情報を格納する変数
-
-            /*Ray ray = new Ray(transform.position,TransformDiff); //DEBUG
-            Debug.DrawRay(transform.position,TransformDiff,Color.red); //rayの可視化
+            //座標の差を格納する変数
+            Vector3 TransformDiff = collider.transform.position - transform.position;
+            //対象との距離を格納する変数
+            float Distance = TransformDiff.magnitude;
+            //対象への方向を格納する変数
+            Vector3 Direction = TransformDiff.normalized;
+            //ヒットしたオブジェクトの情報を格納する変数
+            int HitCount = Physics.RaycastNonAlloc(transform.position, Direction, HitObject, Distance, layerMask);
+            
+            //DEBUG
+            /*Ray ray = new Ray(transform.position,TransformDiff);
+            //rayの可視化
+            Debug.DrawRay(transform.position,TransformDiff,Color.red);
             Physics.Raycast(ray, out RaycastHit hit);
-            Debug.Log("HitCount" + HitCount + "   " + hit.collider.gameObject.name); //オブジェクト数確認*/
+            //オブジェクト数確認
+            Debug.Log("HitCount" + HitCount + "   " + hit.collider.gameObject.name);*/
 
-            if(HitCount == 0) //障害物がない場合
+            //障害物がない場合
+            if(HitCount == 0)
             {
                 navMeshAgent.isStopped = false;
-                navMeshAgent.destination = collider.transform.position; //対象へ向かう
+                //対象へ向かう
+                navMeshAgent.destination = collider.transform.position;
             }
             else
             {

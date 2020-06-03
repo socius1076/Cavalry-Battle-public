@@ -8,7 +8,8 @@ public class LifeGaugeContainer : MonoBehaviour
 {
     private static LifeGaugeContainer instance;
 
-    public static LifeGaugeContainer Instance //インスタンスを返す
+    //インスタンスを返す
+    public static LifeGaugeContainer Instance
     {
         get { return instance; }
     }
@@ -24,7 +25,8 @@ public class LifeGaugeContainer : MonoBehaviour
         {
             throw new Exception("LifeBarContainer instance already exists.");
         }
-        instance = this; //インスタンスを代入
+        //インスタンスを代入
+        instance = this;
         rectTransform = GetComponent<RectTransform>();
     }
 
@@ -38,6 +40,7 @@ public class LifeGaugeContainer : MonoBehaviour
     public void Remove(ObjectStatus status)
     {
         Destroy(stateLifeBarMap[status].gameObject);
-        stateLifeBarMap.Remove(status); //キーを指定して削除
+        //キーを指定して削除
+        stateLifeBarMap.Remove(status);
     }
 }

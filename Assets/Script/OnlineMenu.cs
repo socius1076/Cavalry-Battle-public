@@ -43,18 +43,24 @@ public class OnlineMenu : MonoBehaviour
         StartCoroutine(MatchingWait());
     }
 
+    //試合開始処理
     private IEnumerator MatchingWait()
     {
+        //マッチング処理が完了するまで待機
         while(!pun.Ready) yield return null;
         MenuButton.interactable = false;
         MatchingPanel.SetActive(false);
         CountdownPanel.SetActive(true);
-        if(PhotonNetwork.IsMasterClient) //試合開始時間を記録
+        //マスターの場合
+        if(PhotonNetwork.IsMasterClient)
         {
+            //部屋が作られてから経過した時間をサーバから取得
             var hashtable = new ExitGames.Client.Photon.Hashtable();
             hashtable["Start"] = PhotonNetwork.ServerTimestamp;
+            //カスタムプロパティの値を同期
             PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
         }
+        //画面遷移後数秒待機
         yield return new WaitForSeconds(Margin);
         ReadyGame = true;
     }
@@ -62,23 +68,34 @@ public class OnlineMenu : MonoBehaviour
     private void Update()
     {
         if(!ReadyGame || Finish) return;
-        if(!StartGame) //試合開始前カウントダウン
+        //試合開始前カウントダウン
+        if(!StartGame)
         {
-            int DiffTime = (PhotonNetwork.ServerTimestamp - pun.StartTime) / 1000; //サーバの時間から試合時間を同期する
+            //部屋が作られてから経過した時間と試合開始時間の差(増えていく)
+            int DiffTime = (PhotonNetwork.ServerTimestamp - pun.StartTime) / 1000;
+            //ReadyTime(カウントダウン時間)とMargin(画面遷移後待機時間)の和からDiffTimeを引く
             int NowTime = (ReadyTime + Margin) - DiffTime;
-            if(NowTime > 3 || NowTime < 0) return;
+            //正しい数値か確認
+            if(NowTime > ReadyTime || NowTime < 0) return;
+            //数字を画面に表示させる
             CountdownText.text = NowTime.ToString();
             if(NowTime == 0)
             {
                 StartCoroutine(CountdownCoroutine());
             }
         }
+        //試合時間
         else
         {
+            //部屋が作られてから経過した時間と試合開始時間の差(増えていく)
             int DiffTime = (PhotonNetwork.ServerTimestamp - pun.StartTime) / 1000;
+            //MaxTime(試合時間)とReadyTime(カウントダウン時間)とMargin(画面遷移後待機時間)の和からDiffTimeを引く
             int NowTime = (MaxTime + ReadyTime + Margin) - DiffTime;
-            if(NowTime > 60 || NowTime < 0) return;
+            //正しい数値か確認
+            if(NowTime > MaxTime || NowTime < 0) return;
+            //数字を画面に表示させる
             TimeText.text = NowTime.ToString();
+            //0秒になったらボタンの操作ができないようにする
             if(NowTime == 0)
             {
                 MenuButton.interactable = false;
@@ -92,6 +109,7 @@ public class OnlineMenu : MonoBehaviour
         }
     }
 
+    //"Go!"と画面に表示させてボタンの操作を可能にする
     private IEnumerator CountdownCoroutine()
     {
         CountdownPanel.SetActive(false);
@@ -102,24 +120,31 @@ public class OnlineMenu : MonoBehaviour
         StartGame = true;
     }
 
+    //試合終了後処理
     private IEnumerator ResultCoroutine()
     {
         yield return new WaitForSeconds(3.0f);
+        //自分の旗の数を送る
         var hashtable = new ExitGames.Client.Photon.Hashtable();
-        hashtable["Flag"] = pun.playerStatus.GetComponentInChildren<FlagStatus>().number; //自分の旗の数を送る
+        hashtable["Flag"] = pun.playerStatus.GetComponentInChildren<FlagStatus>().number;
+        //自分の旗の数を送る
         PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
+        //結果が設定されるまで待機
         while(string.IsNullOrEmpty(pun.Judge)) yield return null;
         FinishPanel.SetActive(false);
         ResultPanel.SetActive(true);
+        //引き分けの場合
         if(pun.Judge.Equals("Draw"))
         {
             ResultText.text = pun.Judge;
         }
+        //引き分けでない場合
         else
         {
             ResultText.text = pun.Judge + " の勝利!!";
         }
         yield return new WaitForSeconds(3.0f);
+        //ロビーに戻るか確認
         MenuButton.interactable = true;
         MenuPanel.SetActive(true);
     }

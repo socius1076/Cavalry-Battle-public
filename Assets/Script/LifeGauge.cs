@@ -34,9 +34,12 @@ public class LifeGauge : MonoBehaviour
         else
         {
             FillImage.fillAmount = objectStatus.NowLife / objectStatus.MaxLife;
-            Vector3 screenPoint = _camera.WorldToScreenPoint(objectStatus.transform.position); //オブジェクトのワールド座標からスクリーン座標へ変換
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, screenPoint, null, out Vector2 localPoint); //スクリーン座標をUIのローカル座標に変換
-            transform.localPosition = localPoint + new Vector2(0.0f, 220.0f); //上にずらす
+            //オブジェクトのワールド座標からスクリーン座標へ変換
+            Vector3 screenPoint = _camera.WorldToScreenPoint(objectStatus.transform.position);
+            //スクリーン座標をUIのローカル座標に変換
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, screenPoint, null, out Vector2 localPoint);
+            //上にずらす
+            transform.localPosition = localPoint + new Vector2(0.0f, 220.0f);
             playernameText.transform.localPosition = localPoint = new Vector2(0.0f, 40.0f);
         }
     }

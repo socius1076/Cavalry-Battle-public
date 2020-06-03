@@ -17,13 +17,15 @@ public class OnRideController : MonoBehaviourPunCallbacks
     public string playername = null;
     public Joystick joystick = null;
 
-    private bool IsGrounded //接地判定
+    //接地判定
+    private bool IsGrounded
     {
         get
         {
             Vector3 Pos = _transform.position + new Vector3(0.0f, 1.0f, 0.0f);
             RaycastHit raycastHit;
-            if(Physics.SphereCast(Pos, 1.0f, Vector3.down, out raycastHit, 0.01f)) //球状のrayを飛ばす
+            //球状のrayを飛ばす
+            if(Physics.SphereCast(Pos, 1.0f, Vector3.down, out raycastHit, 0.01f))
             {
                 return true;
             }
@@ -51,7 +53,8 @@ public class OnRideController : MonoBehaviourPunCallbacks
             Xpos = joystick.Horizontal;
             Zpos = joystick.Vertical;
         }
-        else //停止
+        //停止
+        else
         {
             animator.SetFloat("MoveSpeed", 0.0f);
             rideranimator.SetFloat("MoveSpeed", 0.0f);
@@ -62,25 +65,32 @@ public class OnRideController : MonoBehaviourPunCallbacks
     {
         if(playerStatus.LiveState)
         {
-            Vector3 cameraForward = Vector3.Scale(_camera.transform.forward, new Vector3(1.0f, 0.0f, 1.0f)).normalized; //カメラの向きからx-z平面の単位ベクトルを得る
+            //カメラの向きからx-z平面の単位ベクトルを得る
+            Vector3 cameraForward = Vector3.Scale(_camera.transform.forward, new Vector3(1.0f, 0.0f, 1.0f)).normalized;
             if (IsGrounded) 
             {
-                MoveVelocity.y = 0.0f; //接地時はyベクトル0
+                //接地時はyベクトル0
+                MoveVelocity.y = 0.0f;
                 animator.SetFloat("MoveSpeed", new Vector3(MoveVelocity.x, 0.0f, MoveVelocity.z).magnitude);
                 rideranimator.SetFloat("MoveSpeed", new Vector3(MoveVelocity.x, 0.0f, MoveVelocity.z).magnitude);
             }
-            MoveVelocity = cameraForward * Zpos * Velocity + _camera.transform.right * Xpos * Velocity; //カメラの向きと速度を合わせる
-            Vector3 Look = new Vector3(MoveVelocity.x, 0.0f, MoveVelocity.z);  //向かせたいベクトルの変数
+            //カメラの向きと速度を合わせる
+            MoveVelocity = cameraForward * Zpos * Velocity + _camera.transform.right * Xpos * Velocity;
+            //向かせたいベクトルの変数
+            Vector3 Look = new Vector3(MoveVelocity.x, 0.0f, MoveVelocity.z);
             if(Look != Vector3.zero && Look.magnitude > 0.1f)
             {
-                Quaternion Rotation = Quaternion.LookRotation(Look); //向かせたい角度の変数
-                _transform.rotation = Quaternion.RotateTowards(_transform.rotation, Rotation, RotationSpeed * Time.deltaTime); //滑らかに向く
+                //向かせたい角度の変数
+                Quaternion Rotation = Quaternion.LookRotation(Look);
+                //滑らかに向く
+                _transform.rotation = Quaternion.RotateTowards(_transform.rotation, Rotation, RotationSpeed * Time.deltaTime);
             }
             _rigidbody.AddForce(MoveVelocity);
         }
     }
 
-    /*void OnDrawGizmos() //DEBUG rayの形状確認
+    //DEBUG rayの形状確認
+    /*void OnDrawGizmos() 
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position + new Vector3(0.0f, 1.0f, 0.0f), 1.0f);

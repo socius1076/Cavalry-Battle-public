@@ -23,7 +23,8 @@ public class Operation : MonoBehaviour
     private void Update()
     {
         if(playerStatus == null) return;
-        if(playerStatus.SkillState) //スキルのクールダウン処理
+        //スキルのクールダウン処理
+        if(playerStatus.SkillState)
         {
             SkillButton.interactable = false;
         }

@@ -7,7 +7,8 @@ public class Title : MonoBehaviour
     [SerializeField] private Text text = null;
     [SerializeField] private Button button = null;
     [SerializeField] private Pun pun = null;
-    public string playername = null; //参照用変数
+    //参照用変数
+    public string playername = null;
 
     private void Start()
     {
@@ -22,7 +23,8 @@ public class Title : MonoBehaviour
         playername = text.text;
     }
 
-    private void Update() //名前を一文字以上入力させる
+    //名前を一文字以上入力させる
+    private void Update()
     {
         if(playername.Length > 0)
         {

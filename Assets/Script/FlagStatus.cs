@@ -42,30 +42,39 @@ public class FlagStatus : MonoBehaviourPunCallbacks
         }
     }
 
+    //プレイヤーのHPが0になった場合呼ばれる旗を落とす処理
     private void Drop()
     {
         if(dropjudge) return;
         dropjudge = true;
+        //自身の生成したオブジェクトの場合
         if(photonView.IsMine)
         {
             int numcache = number;
             for(int i = 0; i < numcache; i++)
             {
+                //ネットワークオブジェクト(同期させるオブジェクト)生成
                 FlagDrop flag = PhotonNetwork.Instantiate("Flag", playerPos.position, Quaternion.identity).GetComponent<FlagDrop>();
                 flag.Initialize(playerPos);
+                //RPCで呼び出し
                 photonView.RPC("FlagDec", RpcTarget.All);
             }
         }
     }
 
+    //旗の数の変更(RPC)
+    //RPCで実行したいメソッドに[PunRPC]属性をつける
     [PunRPC] public void FlagInc()
     {
         switch(number)
         {
             case 0:
+                //旗の当たり判定ボックスを有効化
                 FlagBox.enabled = true;
+                //3dモデルの大きさを踏まえて当たり判定ボックスのサイズ調整
                 BoxSize.x = 0.02f;
                 FlagBox.size = BoxSize;
+                //所持している旗の並びを整える
                 flag1.SetActive(true);
                 flag2.SetActive(false);
                 flag3.SetActive(false);

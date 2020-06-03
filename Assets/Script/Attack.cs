@@ -16,7 +16,8 @@ public class Attack : MonoBehaviourPunCallbacks
     [SerializeField] private ParticleSystem _particleSystem = null;
     [SerializeField] private FlagStatus flagStatus = null;
     private ObjectStatus objectStatus = null;
-    public int flagcount = 0; //トレーニングモード用変数
+    //トレーニングモード用変数
+    public int flagcount = 0;
     
     private void Start()
     {
@@ -83,20 +84,26 @@ public class Attack : MonoBehaviourPunCallbacks
         StartCoroutine(CooldownCoroutine());
     }
 
+    //ダメージ処理
     public void HitAttack(Collider collider)
     {
+        //プレイヤーの場合
         if(objectStatus.CompareTag("Player"))
         {
             PlayerStatus playerStatus = objectStatus.GetComponent<PlayerStatus>();
+            //オンラインマッチングモードの場合
             if(playerStatus.pun.roomjudge == 0)
             {
-                if(!photonView.IsMine) //実行中のphotonviewが自分かどうか判定,hp同期のためfalse
+                //ラグを考慮し適切にダメージ処理が行われるよう、他プレイヤー側に表示されている自身のオブジェクトがダメージを受けた場合に処理を行う
+                //他プレイヤー側のオブジェクトか判定
+                if(!photonView.IsMine)
                 {
                     ObjectStatus Target = collider.GetComponent<ObjectStatus>();
                     if(Target == null) return;
                     Target.Damage(objectStatus.Attack);
                 }
             }
+            //トレーニングモードの場合
             else if(playerStatus.pun.roomjudge == 1)
             {
                 ObjectStatus Target = collider.GetComponent<ObjectStatus>();
@@ -104,6 +111,7 @@ public class Attack : MonoBehaviourPunCallbacks
                 Target.Damage(objectStatus.Attack);
             }
         }
+        //敵の場合
         else
         {
             ObjectStatus Target = collider.GetComponent<ObjectStatus>();
@@ -123,23 +131,30 @@ public class Attack : MonoBehaviourPunCallbacks
         StartCoroutine(CooldownCoroutine());
     }
 
+    //旗を奪うことに成功した場合に呼ばれる
     public void HuntAttack(Collider collider)
     {
+        //トレーニングモードの場合
         if(collider.GetComponentInParent<ObjectStatus>().CompareTag("Enemy") == true)
         {
             flagStatus.FlagInc();
             flagcount++;
             Destroy(collider.gameObject);
         }
+        //オンラインマッチングモードの場合
         else
         {
+            //自身の生成したオブジェクトの場合
             if(photonView.IsMine)
             {
+                //自身の旗を増やす
                 flagStatus.photonView.RPC("FlagInc", RpcTarget.All);
             }
             FlagStatus enemyflagStatus = collider.GetComponentInChildren<FlagStatus>();
+            //他プレイヤーが生成したオブジェクトの場合
             if(!enemyflagStatus.photonView.IsMine)
             {
+                //取られたプレイヤーの旗を減らす
                 enemyflagStatus.photonView.RPC("FlagDec", RpcTarget.All);
             }
         }

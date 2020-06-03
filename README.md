@@ -1,48 +1,67 @@
-# ゲームの概要
+<p align="center"><img src="./Picture/icon.png" width=40%></p>
+<h1 align="center">ゲームの概要</h1>
+<p align="center"><a href="./LICENSE"><img alt ="License" src="https://img.shields.io/github/license/socius1076/Cavalry-Battle-public"></a></p>
 
 タイトルはCavalry-Battle(英語で騎馬戦)です。  
-プラットフォームはスマートフォンを意識しております。  
+プラットフォームはスマートフォンを意識してます。  
 開発人数は1人、制作期間は2ヶ月です。  
 ファンタジー×騎馬戦がコンセプトの旗取り対戦ゲームです。  
-戦略性を増すために、騎馬戦のルールに加えてHPを追加しております。  
-プレイヤーをワクワクさせる要素としてドラゴンや技といったファンタジーな構成にしました。  
+戦略性を増すために、騎馬戦のルールに加えてHPを追加してます。  
+プレイヤーをワクワクさせる要素としてドラゴンや技といったファンタジーな構成にしました。
+
+<img src="./Picture/picture1.png" width=50%><img src="./Picture/picture2.png" width=50%>
+<p align="center"><img src="./Picture/picture3.png" width=50%></p>
 
 ## 苦労した点
 
 特にオンライン化に苦労しました。  
 オンラインに対応することを決めたとき、途中からオンライン機能を付けたすという考え方では躓くため、最初からオンライン化を意識して開発する必要があることを学びました。  
-オンライン化にあたりPhoton Unity Networking2(PUN2)というUnityパッケージを使用していますが、ツールの特徴となる自動で定期的にデータを送受信する機能、RPC機能、部屋の共通変数を設定する機能の三つの機能を理解し、使い分けることで、HPの同期や、旗の位置や数の同期、制限時間の同期などを実現しました。  
+オンライン化にあたりPhoton Unity Networking2(PUN2)というUnityパッケージを使用していますが、ツールの特徴となる
+
+- 自動で定期的にデータを送受信する機能(オブジェクト同期)
+- RPC機能
+- 部屋の共通変数を設定する機能(カスタムプロパティ)
+
+の三つの機能を理解し、使い分けることで、HPの同期や、旗の位置や数の同期、制限時間の同期などを実現しました。
 
 ## ソースコードの場所
 
 /Assets/Script/  
 
-アピールポイントとなる処理の概要と対象のソースファイル  
+- アピールポイントとなる対象のソースコード(処理の詳細はソースコードにコメントを記載しています)  
 
-・HPの同期  
-オンライン化にあたってPhoton Unity Networking2(PUN2)というUnityパッケージを使用しております。  
-位置やアニメーションの同期はUnityエディター上で行っております。  
-その機能のうちオブジェクト同期という自動で定期的にデータを送受信し続ける機能でHPの同期を行っております。(PlayerStatus.cs 135～145行)  
-自身が生成したオブジェクトを基準とするため、ダメージを受ける処理は相手側に表示されている自身のオブジェクトがダメージを受けた場合に処理を行うようにしております。(Attack.cs 86～99行)  
-・旗の数の同期  
-PUN2のRPC機能を使用して同期を行っております。旗を取ることに成功した場合、(Attack.cs 126～146行) RPC機能により旗の数を変更する関数が呼び出されます。(FlagStatus.cs 61～138行)  
-・旗の位置の同期  
-落とす旗をネットワークオブジェクト(同期させるオブジェクト)に設定し、プレイヤーのHPが0になった場合、それが自信が生成したオブジェクトであれば (FlagStatus.cs 45～59行) 旗を落とす処理を行い、(FlagDrop.cs 11～30行) RPC機能を使い落とす処理が完了したら拾えるようにしております。(FlagDrop.cs 32～36行)  
-・試合の流れの同期  
-プレイヤーがマッチングボタンを押すと、ルーム入室処理が行われ、(Lobby.cs 48～53行) カメラが準備完了の合図を出します。(MainCamera.cs 15～50行)  
-この時、PUN2の関数が呼ばれます。(Pun.cs 37行)  
-PUN2のカスタムプロパティという機能を使い、自身が設定した変数を同期することでプレイヤーが集まったかどうかの判定を行っております。(Pun.cs 97～135)  
-最初に部屋を作ったプレイヤーが部屋のマスターとなり、マスターかどうかで処理の内容が変わります。(Pun.cs 39行)  
-プレイヤーが揃った場合、カウントダウンや試合時間を同期するためにマスターが部屋が作られてから経過した時間をサーバから取得、その開始時間を記録して、その時間を同期 (OnlineMenu.cs 46～60行) することで各プレイヤーのカウントダウンや試合時間が同期されます。(OnlineMenu.cs 64～81行)  
-試合終了後、各プレイヤーの旗の数を同期し、(OnlineMenu.cs 105～110行) マスターがそれを集計して結果を返します。(Pun.cs 41～96行)  
-その後、結果が表示されます。(OnlineMenu.cs 111～125行)  
-・オブジェクト指向のメリットであるカプセル化を意識しております。(すべてのファイル)  
-・オブジェクト指向のメリットである継承を利用しております。(ObjectStatus.cs PlayerStatus.cs EnemyStatus.cs)  
+  オンライン化にあたりPhoton Unity Networking2(PUN2)というUnityパッケージを使用しています。  
+  位置やアニメーションの同期はUnityエディター上で行っています。  
 
-その他のアピールポイント
+  - HPの同期
+    1. [HPの同期 PlayerStatus.cs(138～152行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/PlayerStatus.cs#L138)
+    2. [ダメージ処理 Attack.cs(87～105行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/Attack.cs#L87)
+  - 旗の数の同期
+    1. [旗を取ることに成功した場合 Attack.cs(134～161行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/Attack.cs#L134)
+    2. [旗の数を変更 FlagStatus.cs(65～147行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/FlagStatus.cs#L65)
+  - 旗の位置の同期  
+    1. [旗を落とす指示 FlagStatus.cs(45～63行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/FlagStatus.cs#L45)
+    2. [旗を落とす処理 FlagDrop.cs(11～48行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/FlagDrop.cs#L11)
+  - 試合の流れの同期  
+    1. [ルーム入室処理 Lobby.cs(48～54行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/Lobby.cs#L48)
+    2. [カメラが準備 MainCamera.cs(15～54行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/MainCamera.cs#L15)
+    3. [カスタムプロパティによる制御で使う関数 （Pun.cs 36行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/Pun.cs#L36)
+    4. [プレイヤーが集まったかどうか Pun.cs(123～177行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/Pun.cs#L123)
+    5. [部屋が作られてから経過した時間を同期 OnlineMenu.cs(46～66行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/OnlineMenu.cs#L46)
+    6. [カウントダウン、試合時間同期 OnlineMenu.cs(70～97行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/OnlineMenu.cs#L70)
+    7. [終了後の旗の数同期 OnlineMenu.cs(123～131行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/OnlineMenu.cs#L123)
+    8. [集計処理 Pun.cs(43～122行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/Pun.cs#L43)
+    9. [結果表示 OnlineMenu.cs(132～150行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/OnlineMenu.cs#L132)
+  - オブジェクト指向のメリットである継承を利用しております。([ObjectStatus.cs](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/ObjectStatus.cs) [PlayerStatus.cs](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/PlayerStatus.cs) [EnemyStatus.cs](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/EnemyStatus.cs))
+  - オブジェクト指向のメリットであるカプセル化を意識しております。(すべてのファイル)
 
-・ゲーム内で使用されている3Dモデル、3DモデルのアニメーションはBlenderを使い制作しました。  
-・Unityの機能を理解し、活用しております。(アニメーションの制御/NavMesh/UI など)  
+- その他のアピールポイント
+
+  - ゲーム内で使用されている3Dモデル、3DモデルのアニメーションはBlenderを使い制作しました。
+  - Unityの機能を理解し、活用しております。
+    - アニメーションの制御/Animator Controller
+    - 敵の追尾処理/NavMesh
+    - UI/Canvas,Panel,Button,Text...
 
 ## 機能紹介動画
 
@@ -55,15 +74,17 @@ PUN2のカスタムプロパティという機能を使い、自身が設定し�
 
 ## 起動方法
 
-・PCの場合(Windows)  
+- PCの場合(Windows)
 /Game/PC フォルダ内の cavalry battle.exe から起動することができます。  
 
-・スマートフォンの場合(Android)  
+- スマートフォンの場合(Android)
 /Game/Smartphone フォルダ内の cavalry-battle-android.apk をスマートフォンにインストールすることで遊ぶことができます。  
-手順は  
-1.apkファイルを端末のDownloadなどのフォルダにコピー  
-2.コピーしたapkファイルを端末で開く(タップ)する  
-3.一時的に提供元不明のアプリを許可する  
+
+手順は
+
+1. apkファイルを端末のDownloadなどのフォルダにコピー
+2. コピーしたapkファイルを端末で開く(タップ)する
+3. 一時的に提供元不明のアプリを許可する
 
 unityエディタを使用する場合、unityのバージョンは2019.2.18f1、AssetStoreより  
 Joystick Pack, DOTween(HOTween v2), PUN2-FREE アセットが必要です。また、TextMesh Proのインポートが必要です。  
@@ -71,22 +92,24 @@ Joystick Pack, DOTween(HOTween v2), PUN2-FREE アセットが必要です。ま�
 
 ## 基本操作
 
-1.プレイヤー名を入力する  
-2.オンラインマッチングモードかトレーニングモードを選択する  
+1. プレイヤー名を入力する
+2. オンラインマッチングモードかトレーニングモードを選択する  
 ※オンラインマッチングモードは1vs1のオンライン対戦で、トレーニングモードは敵が一定間隔ごとに湧いてきます。  
-3.画面右ジョイステックで移動  
-ジャンプボタンでジャンプ  
-skillボタンでスキル(炎)発動、クールダウンあり  
-DoragonAttackボタンでドラゴンが攻撃  
-RiderAttackボタンでライダーが攻撃  
-RiderHuntボタンでライダーが旗をとる動作をする  
-画面の右半分をスワイプ(ドラッグ)してカメラを操作する  
+3. 画面右ジョイステックで移動  
+   ジャンプボタンでジャンプ  
+   skillボタンでスキル(炎)発動、クールダウンあり  
+   DoragonAttackボタンでドラゴンが攻撃  
+   RiderAttackボタンでライダーが攻撃  
+   RiderHuntボタンでライダーが旗をとる動作をする  
+   画面の右半分をスワイプ(ドラッグ)してカメラを操作する  
 
 ## ゲームのルール
 
 現在1vs1に対応しています。
-オンラインマッチングモードでは制限時間内で旗を取り合い、最後に旗を多く持っているプレイヤーの勝利です。旗の数が同じ場合、引き分けとなります。  
-プレイヤーにはHPがあり、HPが0になると旗を落とし、一定時間行動不能状態になります。また、壁に当たるとダメージを受けます。  
+オンラインマッチングモードでは制限時間内で旗を取り合い、最後に旗を多く持っているプレイヤーの勝利です。  
+旗の数が同じ場合、引き分けとなります。  
+プレイヤーにはHPがあり、HPが0になると旗を落とし、一定時間行動不能状態になります。  
+また、壁に当たるとダメージを受けます。  
 
 トレーニングモードではプレイヤーは無敵で、ひたすら敵を倒すことや、旗を奪うことができます。  
 
@@ -99,17 +122,17 @@ RiderHuntボタンでライダーが旗をとる動作をする
 
 ## ライブラリや参考にしたプログラム
 
-オンライン化にあたり、Photon Unity Networking2(PUN2)というUnityパッケージを使用しております。  
+オンライン化にあたり、Photon Unity Networking2(PUN2)というUnityパッケージを使用してます。  
 主に、書籍「作って学べるUnity本格入門」を参考にしました。  
 
 ## 使用ソフト
 
-unity 2019.2.18f1  
-blender  
-krita  
-domino  
-audacity  
-sourcetree  
+- unity 2019.2.18f1  
+- blender  
+- krita  
+- domino  
+- audacity  
+- sourcetree  
 
 ## 製作者
 

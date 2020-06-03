@@ -21,7 +21,8 @@ public class EnemyStatus : ObjectStatus
 
     private void Update()
     {
-        animator.SetFloat("MoveSpeed",navMeshAgent.velocity.magnitude); //AnimatorのMoveSpeed値設定
+        //AnimatorのMoveSpeed値設定
+        animator.SetFloat("MoveSpeed",navMeshAgent.velocity.magnitude);
     }
 
     protected override void Die()

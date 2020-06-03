@@ -45,6 +45,7 @@ public class Lobby : MonoBehaviour
         text.text = nowmember + "/" + maxmember;
     }
 
+    //マッチングボタンを押した後ルーム入室処理
     private void RoomEnter()
     {
         Audio2d.Instance.Play("Ok");

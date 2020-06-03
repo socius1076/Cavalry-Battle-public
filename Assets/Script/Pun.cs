@@ -10,7 +10,8 @@ public class Pun : MonoBehaviourPunCallbacks
     public bool namecheck = false;
     public int maxmember = 0;
     public int nowmember = 0;
-    public int roomjudge = 0; //部屋判断用変数
+    //部屋判断用変数
+    public int roomjudge = 0;
     public bool maxroom = false;
     public PlayerStatus playerStatus = null;
     public int EntryNumber = 0;
@@ -25,110 +26,151 @@ public class Pun : MonoBehaviourPunCallbacks
 
     private IEnumerator Start()
     {
-        while(!namecheck) //名前が決定するまで待機
-        {
-            yield return new WaitForSeconds(1.0f);
-        }
+        //名前が決定するまで待機
+        while(!namecheck) yield return new WaitForSeconds(1.0f);
         PhotonNetwork.ConnectUsingSettings();
         PhotonNetwork.SendRate = 30;
         PhotonNetwork.SerializationRate = 10;
     }
 
+    //カスタムプロパティ変更時呼ばれるコールバック
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
+        //最初に部屋を作ったプレイヤーがマスターとなり、カスタムプロパティの更新権限を与える
+        //マスターの場合
         if(PhotonNetwork.IsMasterClient)
         {
-            if(Ready) //試合が開始している場合
+            //試合が開始している場合
+            if(Ready)
             {
+                //"Start"(試合開始時間)が更新された場合
                 if(changedProps.TryGetValue("Start", out object StartObject))
                 {
+                    //試合開始時間設定
                     StartTime = (int)StartObject;
                 }
+                //"Flag"(旗の数)が更新された場合
                 if(changedProps.TryGetValue("Flag", out object FlagObject))
                 {
-                    if(!string.IsNullOrEmpty(Judge)) return; //連続で呼ばれないようにする
+                    //連続で呼ばれないようにする
+                    if(!string.IsNullOrEmpty(Judge)) return;
+                    //メンバー数確認用変数
                     int membercount = 0;
+                    //部屋のメンバーの数だけ繰り返す
                     foreach(var Member in PhotonNetwork.PlayerList)
                     {
+                        //"Flag"(旗の数)が設定されている場合
                         if(Member.CustomProperties["Flag"] != null)
                         {
                             membercount++;
                         }
                     }
-                    if(membercount == maxmember) //全員の処理を受け取ったら
+                    //全員の処理を受け取ったら
+                    if(membercount == maxmember)
                     {
+                        //一番多く旗を集めたプレイヤーの旗の数
                         int max = 0;
+                        //一番多く旗を集めたプレイヤーの名前
                         string name = "";
-                        bool draw = false; 
+                        //引き分け用フラグ
+                        bool draw = false;
+                        //部屋のメンバーの数だけ繰り返す 
                         foreach(var Member in PhotonNetwork.PlayerList)
                         {
+                            //maxより多い旗を集めている場合
                             if((int)Member.CustomProperties["Flag"] >= max)
                             {
                                 max = (int)Member.CustomProperties["Flag"];
                                 name = Member.NickName;
                             }
                         }
+                        //部屋のメンバーの数だけ繰り返す
                         foreach(var Member in PhotonNetwork.PlayerList)
                         {
+                            //一番多く旗を集めたプレイヤーと同じ数だけ旗を持っているプレイヤーがいる場合
                             if((int)Member.CustomProperties["Flag"] == max && !Member.NickName.Equals(name))
                             {
+                                //引き分け
                                 draw = true;
                             }
                         }
-                        if(draw) //引き分けかそうでないか
+                        //引き分けの場合
+                        if(draw)
                         {
+                            //"Win"(結果)にDrawを設定
                             var hashtable = new ExitGames.Client.Photon.Hashtable();
                             hashtable["Win"] = "Draw";
+                            //カスタムプロパティの値を同期
                             PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
                         }
                         else
                         {
+                            //"Win"(結果)に勝者の名前を設定
                             var hashtable = new ExitGames.Client.Photon.Hashtable();
                             hashtable["Win"] = name;
+                            //カスタムプロパティの値を同期
                             PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
                         }
                     }
                 }
+                //"Win"(結果)が更新された場合
                 if(changedProps.TryGetValue("Win", out object WinObject))
                 {
+                    //結果を設定
                     Judge = (string)WinObject;
                 }
             }
+            //試合がまだ始まっていない場合
             else
             {
+                //"Go"(全員の準備完了)が更新された場合
                 if(changedProps.TryGetValue("Go", out object GoObject))
                 {
+                    //試合開始フラグ
                     Ready = (bool)GoObject;
                 }
                 if(Ready) return;
+                //メンバー数確認用変数
                 int membercount = 0;
+                //部屋のメンバーの数だけ繰り返す
                 foreach(var Member in PhotonNetwork.PlayerList)
                 {
+                    //"Ready"(準備完了)が設定されている場合
                     if(Member.CustomProperties["Ready"] != null)
                     {
                         membercount++;
                     }
                 }
+                //全員の処理を受け取ったら
                 if(membercount == maxmember)
                 {
+                    //"Go"(全員の準備完了)設定
                     var hashtable = new ExitGames.Client.Photon.Hashtable();
                     hashtable["Go"] = true;
+                    //カスタムプロパティの値を同期
                     PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
                 }
             }
         }
+        //マスターではない場合
         else
         {
+            //"Go"(全員の準備完了)が更新された場合
             if(changedProps.TryGetValue("Go", out object GoObject))
             {
+                //試合開始フラグ
                 Ready = (bool)GoObject;
             }
+            //"Start"(試合開始時間)が更新された場合
             if(changedProps.TryGetValue("Start", out object StartObject))
             {
+                //試合開始フラグ
                 StartTime = (int)StartObject;
             }
+            //"Win"(結果)が更新された場合
             if(changedProps.TryGetValue("Win", out object WinObject))
             {
+                //結果を設定
                 Judge = (string)WinObject;
             }
         }

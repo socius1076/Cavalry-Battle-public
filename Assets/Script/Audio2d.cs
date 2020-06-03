@@ -10,7 +10,8 @@ public class Audio2d : MonoBehaviour
     [SerializeField] private AudioSource audioSource = null;
     private readonly Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>();
 
-    public static Audio2d Instance //インスタンスを返す
+    //インスタンスを返す
+    public static Audio2d Instance
     {
         get { return instance; }
     }
@@ -19,21 +20,26 @@ public class Audio2d : MonoBehaviour
     {
         if(instance != null)
         {
-            Destroy(gameObject); //既にインスタンスがある場合は自分を破棄する
+            //既にインスタンスがある場合は自分を破棄する
+            Destroy(gameObject);
             return;
         }
         DontDestroyOnLoad(gameObject);
-        instance = this; //インスタンス代入
-        AudioClip[] audioclips = Resources.LoadAll<AudioClip>(""); //Resourcesディレクトリ以下のAudioClipをすべて取得
+        //インスタンス代入
+        instance = this;
+        //Resourcesディレクトリ以下のAudioClipをすべて取得
+        AudioClip[] audioclips = Resources.LoadAll<AudioClip>("");
         foreach(AudioClip clip in audioclips)
         {
             clips.Add(clip.name, clip);
         }
     }
 
-    public void Play(string clipname) //指定した名前の音楽ファイル再生
+    //指定した名前の音楽ファイル再生
+    public void Play(string clipname)
     {
-        if(!clips.ContainsKey(clipname)) //存在しない名前を指定した場合エラー
+        //存在しない名前を指定した場合エラー
+        if(!clips.ContainsKey(clipname))
         {
             throw new Exception("Sound" + clipname + "is not defined");
         }

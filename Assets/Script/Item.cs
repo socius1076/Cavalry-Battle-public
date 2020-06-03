@@ -7,9 +7,11 @@ public class Item : MonoBehaviour
 {
     private enum ItemEnum
     {
-        LifeUP, //未実装
+        //未実装
+        LifeUP,
         PowerUP,
-        SpeedUP //未実装
+        //未実装
+        SpeedUP
     }
     [SerializeField] private ItemEnum type = ItemEnum.LifeUP;
     
