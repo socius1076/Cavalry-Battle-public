@@ -38,7 +38,7 @@ public class Item : MonoBehaviour
                 playerStatus.NowLife += 1.0f;
                 break;
             case ItemEnum.PowerUP:
-                playerStatus.Attack += 1.0f;
+                playerStatus.AttackPower += 1.0f;
                 break;
             case ItemEnum.SpeedUP:
                 onRideController.Velocity += 10.0f;

@@ -270,7 +270,7 @@ public class Pun : MonoBehaviourPunCallbacks
         OnRideController onRideController = player.GetComponent<OnRideController>();
         playerStatus = player.GetComponent<PlayerStatus>();
         MainCamera mainCamera = Camera.main.GetComponent<MainCamera>();
-        mainCamera.target = player;
+        mainCamera.Target = player;
         Operation operation = GameObject.Find("OperationPanel").GetComponent<Operation>();
         operation.attack = playerattack;
         operation.playerStatus = playerStatus;

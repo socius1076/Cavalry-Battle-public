@@ -15,9 +15,9 @@ public class RiderAttack : MonoBehaviour
         attack.RiderAttackStart();
     }
 
-    private void FinishRiderAttack()
+    private void RiderAttackFinish()
     {
-        attack.FinishRiderAttack();
+        attack.RiderAttackFinish();
     }
 
     private void HuntStart()
@@ -25,8 +25,8 @@ public class RiderAttack : MonoBehaviour
         attack.HuntStart();
     }
 
-    private void FinishHunt()
+    private void HuntFinish()
     {
-        attack.FinishHunt();
+        attack.HuntFinish();
     }
 }

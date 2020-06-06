@@ -6,7 +6,7 @@ using Photon.Pun;
 
 public class MainCamera : MonoBehaviour
 {
-    public GameObject target = null;
+    public GameObject Target = null;
     private Vector3 TargetPos = Vector3.zero;
     private Pun pun = null;
     public bool CameraOk = false;
@@ -23,7 +23,7 @@ public class MainCamera : MonoBehaviour
     {
         //プレイヤーが部屋に入るまで待機
         while(!PhotonNetwork.InRoom) yield return null;
-        TargetPos = target.transform.position;
+        TargetPos = Target.transform.position;
         //プレイヤー同士が向き合うようにカメラが見る位置を決める
         switch(pun.EntryNumber)
         {
@@ -55,11 +55,11 @@ public class MainCamera : MonoBehaviour
 
     private void Update()
     {
-        if(CameraOk == false || target == null) return;
+        if(CameraOk == false || Target == null) return;
         //ターゲットが動いていたら合わせる
-        transform.position += target.transform.position - TargetPos;
+        transform.position += Target.transform.position - TargetPos;
         //ターゲットの位置更新
-        TargetPos = target.transform.position;
+        TargetPos = Target.transform.position;
         //スマートフォンの場合
         if(Input.touchCount > 0)
         {

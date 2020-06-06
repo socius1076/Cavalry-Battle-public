@@ -16,11 +16,9 @@ public class TrainingMenu : MonoBehaviour
     [SerializeField] private MainCamera mainCamera = null;
     [SerializeField] private GameObject LoadPanel = null;
     private bool ActivePanel = false;
-    private Pun pun = null;
 
     private void Start()
     {
-        pun = GameObject.Find("Pun").GetComponent<Pun>();
         LoadPanel.SetActive(true);
         MenuPanel.SetActive(false);
         PausePanel.SetActive(false);
@@ -92,7 +90,7 @@ public class TrainingMenu : MonoBehaviour
     private void Yes()
     {
         Audio2d.Instance.Play("Ok");
-        mainCamera.target = null;
+        mainCamera.Target = null;
         ActivePanel = false;
         PhotonNetwork.LeaveRoom();
     }

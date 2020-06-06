@@ -1,0 +1,321 @@
+@startuml class
+
+class Audio2d
+{
+    + {static} Audio2d Instance
+    + void Play(string clipname)
+}
+
+class CollisionDetector
+{
+    - void OnTriggerEnter(Collider coll)
+    - void OnTriggerStay(Collider coll)
+}
+
+CollisionDetector --> Attack
+
+class Attack
+{
+    - ObjectStatus objectStatus
+    + int flagcount
+    + void AttackIfPossible(int signal)
+    + void AttackRangeEnter(Collider collider)
+    + void AttackRnageEnter(Collider collider)
+    + void AttackStart()
+    + void AttackFinish()
+    + void SkillStart()
+    + void SkillFinish()
+    + void RiderAttackStart()
+    + void RiderAttackFinish()
+    + void AttackHit(Collider collider)
+    + void HuntStart()
+    + void HuntFinish()
+    + void HuntAttck(Collider collider)
+    - IEnumerator StartCooldown()
+    - IEnumerator FinishCooldown()
+}
+
+Attack --> ObjectStatus
+Attack --> FlagStatus
+
+class RiderAttack
+{
+    - RiderAttackStart()
+    - RiderAttackFinish()
+    - HuntStart()
+    - HuntFinish()
+}
+
+RiderAttack --> Attack
+
+abstract ObjectStatus
+{
+    + enum StateEnum
+    + float NowLife
+    + float MaxLife
+    + float AttackPower
+    + StateEnum StateEnum
+    + bool MovaAble()
+    + bool AttackAble()
+    # virtual void Start()
+    # virtual void Die()
+    + void LifeGaugeDelete()
+    + virtual void Damage(float damage)
+    + virtual void GoAttack(int signal)
+    + void GoNormal
+    + void GoIdle
+}
+
+ObjectStatus --> LifeGaugeContainer
+
+class PlayerStatus
+{
+    + bool LiveState
+    + bool SkillState
+    + Pun pun
+    # override void Start()
+    # override void Damage(float damege)
+    # override void Die()
+    # override void GoAttack(int signal)
+    # void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    - void JumpAction()
+}
+
+PlayerStatus --|> ObjectStatus
+PlayerStatus --> Pun
+PlayerStatus --> OnRideCotroller
+PlayerStatus --> LifeGaugeContainer
+
+class EnemyStatus
+{
+    - EnemyAppear enemyAppear
+    # override void Start()
+    # override void Die()
+}
+
+EnemyStatus ---|> ObjectStatus
+EnemyStatus --> EnemyAppear
+
+class EnemyMove
+{
+    - EnemyStatus enemyStatus
+    + void OnDetectObject(Collider collider)
+}
+
+EnemyMove --> EnemyStatus
+EnemyMove --> PlayerStatus
+
+class EnemyAppear
+{
+    + PlayerStatus playerStatus
+    + int EnemyCount
+    - IEnumerator SpawnLoop()
+}
+
+EnemyAppear --> PlayerStatus
+
+class OnRideCotroller
+{
+    - PlayerStatus playerStatus
+    + string playername
+    + JoyStick joystick
+    - void Update()
+    - void FixedUpdate()
+    + void Jump()
+}
+
+OnRideCotroller --> PlayerStatus
+OnRideCotroller --> Pun
+
+class Pun
+{
+    + bool namecheck
+    + int maxmember
+    + int nowmember
+    + int roomjudge
+    + bool maxroom
+    + PlayerStatus playerStatus
+    + int EntryNumber
+    + bool Ready
+    + int StartTime
+    + string Judge
+    + public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    + void SetName(string name)
+    + void RoomEnter()
+    + void TrainingEnter()
+    + override void OnJoinRoomFailed(short returnCode, string message)
+    + override void OnRoomListUpdate(List<RoomInfo> roomList)
+    + override void OnConnectedToMaster()
+    + override void OnJoinedLobby()
+    + override void OnJoinedRoom()
+    + override void OnLeftRoom()
+}
+
+Pun --> Attack
+Pun --> OnRideCotroller
+Pun --> MainCamera
+Pun --> Operation
+Pun --> FlagCount
+Pun --> MyFloatingJoystick
+Pun --> EnemyAppear
+
+class FlagStatus
+{
+    + int number
+    - PlayerStatus playerStatus
+    - void Update()
+    - void Drop()
+    + void FlagInc()
+    + void FlagDec()
+}
+
+FlagStatus --> PlayerStatus
+FlagStatus --> FlagDrop
+
+
+class FlagDrop
+{
+    - void OnTriggerEnter(Collider collider)
+}
+
+FlagDrop --> FlagStatus
+
+class FlagCount
+{
+    + Attack Attack
+    + Pun pun
+    + FlagStatus flagStatus
+    - void Update()
+}
+
+FlagCount --> Attack
+FlagCount --> Pun
+FlagCount --> FlagStatus
+
+class Item
+{
+    + void OnTriggerEnter(Collider collider)
+}
+
+Item --> PlayerStatus
+Item --> OnRideCotroller
+
+class ItemDrop
+{
+    - Item ItemPrefab
+    - EnemyStatus enemyStatus
+    - void Update()
+    - void Drop()
+}
+
+ItemDrop --> Item
+ItemDrop --> EnemyStatus
+
+class LifeGaugeContainer
+{
+    + {static} LifeGaugeContainer Instance
+    - LifeGauge lifeGaugePrefab
+    + void Add(ObjectStatus status)
+    + void Remove(ObjectStatus status)
+}
+
+LifeGaugeContainer --> LifeGauge
+
+class LifeGauge
+{
+    - ObjectStatus objectStatus
+    - MainCamera mainCamera
+    - void Start()
+    - void Update()
+}
+
+LifeGauge --> ObjectStatus
+LifeGauge --> MainCamera
+LifeGauge --> OnRideCotroller
+
+class MainCamera
+{
+    + GameObject Target
+    - Pun pun
+    + bool CameraOk
+    - void Start()
+    - IEnumerator WaitTime()
+}
+
+MainCamera --> Pun
+
+class OnlineMenu
+{
+    - MainCamera mainCamera
+    - Pun pun
+    - void Start()
+    - IEnumerator MatchingWait()
+    - void Update()
+    - IEnumerator ResultCoroutine()
+    - void ManuScreen()
+    - void Exit()
+    - void Yes()
+    - void No()
+}
+
+OnlineMenu --> MainCamera
+OnlineMenu --> Pun
+OnlineMenu --> Audio2d
+
+class TrainingMenu
+{
+    - MainCamera mainCamera
+    - void Start()
+    - void MenuScreen()
+    - void Pause()
+    - void Resume()
+    - void Exit()
+    - void Yes()
+    - void No()
+}
+
+TrainingMenu --> MainCamera
+TrainingMenu --> Audio2d
+
+class Operation
+{
+    + Attack Attack
+    + PlayerStatus playerStatus
+    - void Update()
+    - void Action(int signal)
+    - void Jump()
+}
+
+Operation --> Attack
+Operation --> PlayerStatus
+
+class Title
+{
+    - Pun pun
+    - void OnClickButton()
+}
+
+Title --> Pun
+Title --> Audio2d
+
+class Lobby
+{
+    - Pun pun
+    - void Start()
+    - void Update()
+    - void RoomEnter()
+    - void TrainingEnter()
+    - void Title()
+    - void Yes()
+    - void No()
+}
+
+Lobby --> Pun
+Lobby --> Audio2d
+
+class MyFloatingJoystick
+{
+
+}
+
+@enduml

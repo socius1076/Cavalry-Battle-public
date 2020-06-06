@@ -1,0 +1,29 @@
+@startuml sequence
+
+participant Lobby
+participant Pun
+participant MainCamera
+participant OnlineMenu
+participant ServerTimer
+
+== Initializing ==
+Lobby ->> Pun : 部屋入室要求
+Lobby ->> ServerTimer : 部屋作成
+activate ServerTimer
+Lobby ->> MainCamera : シーン移動
+Lobby ->> OnlineMenu : シーン移動
+== Ready ==
+MainCamera ->> Pun : プレイヤー準備完了合図
+Pun ->> OnlineMenu : マッチング完了合図
+OnlineMenu -> ServerTimer : 開始時間要求
+ServerTimer -> OnlineMenu : 開始時間返答
+== Battle ==
+loop
+OnlineMenu -> ServerTimer : 現在時間要求
+ServerTimer -> OnlineMenu : 現在時間返答
+end
+== Result ==
+OnlineMenu ->> Pun : 旗の数送信
+Pun ->> OnlineMenu : 結果送信
+
+@enduml

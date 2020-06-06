@@ -28,10 +28,16 @@
 
 /Assets/Script/  
 
+- クラス図([テキストファイル class-diagram.pu](https://github.com/socius1076/Cavalry-Battle-public/blob/master/UML/class-diagram.pu))  
+このリポジトリに含まれているクラスを記載しています。  
+他クラスと関係がある属性、操作を記載しています。  
+
+<p align="center"><img src="./Picture/class.png" width=50%></p>
+
 - アピールポイントとなる対象のソースコード(処理の詳細はソースコードにコメントを記載しています)  
 
   オンライン化にあたりPhoton Unity Networking2(PUN2)というUnityパッケージを使用しています。  
-  位置やアニメーションの同期はUnityエディター上で行っています。  
+  位置やアニメーションの同期はUnityエディタから設定しています。  
 
   - HPの同期
     1. [HPの同期 PlayerStatus.cs(138～152行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/PlayerStatus.cs#L138)
@@ -52,6 +58,10 @@
     7. [終了後の旗の数同期 OnlineMenu.cs(123～131行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/OnlineMenu.cs#L123)
     8. [集計処理 Pun.cs(43～122行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/Pun.cs#L43)
     9. [結果表示 OnlineMenu.cs(132～150行)](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/OnlineMenu.cs#L132)
+    - シーケンス図([テキストファイル sequence-diagram.pu](https://github.com/socius1076/Cavalry-Battle-public/blob/master/UML/sequence-diagram.pu))  
+
+    <p align="center"><img src="./Picture/sequence.png" width=50%></p>
+
   - オブジェクト指向のメリットである継承を利用しております。([ObjectStatus.cs](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/ObjectStatus.cs) [PlayerStatus.cs](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/PlayerStatus.cs) [EnemyStatus.cs](https://github.com/socius1076/Cavalry-Battle-public/blob/master/Assets/Script/EnemyStatus.cs))
   - オブジェクト指向のメリットであるカプセル化を意識しております。(すべてのファイル)
 
@@ -65,19 +75,33 @@
 
 ## 機能紹介動画
 
-/Movie/DemoMovie.mp4  
+/Movie/DemoMovie.mp4
 
 ## 対戦動画
 
 /Movie/BattleMovie.mp4  
-※音はありません。画面にノイズが走っておりますが、録画アプリによるものです。  
+※音はありません。画面にノイズが走っておりますが、録画アプリによるものです。
+
+## 動作環境
+
+- PC  
+OS : Windows
+- スマートフォン  
+OS : Android
+
+※動作確認済み環境
+
+- PC  
+OS : Windows10 64bit
+- スマートフォン  
+OS : Android 8.0.0以降
 
 ## 起動方法
 
-- PCの場合(Windows)
+- PCの場合(Windows)  
 /Game/PC フォルダ内の cavalry battle.exe から起動することができます。  
 
-- スマートフォンの場合(Android)
+- スマートフォンの場合(Android)  
 /Game/Smartphone フォルダ内の cavalry-battle-android.apk をスマートフォンにインストールすることで遊ぶことができます。  
 
 手順は
@@ -88,7 +112,7 @@
 
 unityエディタを使用する場合、unityのバージョンは2019.2.18f1、AssetStoreより  
 Joystick Pack, DOTween(HOTween v2), PUN2-FREE アセットが必要です。また、TextMesh Proのインポートが必要です。  
-※PUN2-FREEのアプリケーションIDを公開していないため、Unityエディタ上でゲームを遊ぶことはできません。  
+※PUN2-FREEのアプリケーションIDを公開していないため、Unityエディタ上でゲームを遊ぶことはできません。
 
 ## 基本操作
 
@@ -101,7 +125,7 @@ Joystick Pack, DOTween(HOTween v2), PUN2-FREE アセットが必要です。ま�
    DoragonAttackボタンでドラゴンが攻撃  
    RiderAttackボタンでライダーが攻撃  
    RiderHuntボタンでライダーが旗をとる動作をする  
-   画面の右半分をスワイプ(ドラッグ)してカメラを操作する  
+   画面の右半分をスワイプ(ドラッグ)してカメラを操作する
 
 ## ゲームのルール
 
@@ -113,17 +137,17 @@ Joystick Pack, DOTween(HOTween v2), PUN2-FREE アセットが必要です。ま�
 
 トレーニングモードではプレイヤーは無敵で、ひたすら敵を倒すことや、旗を奪うことができます。  
 
-どちらのモードも左上のボタンでロビー画面へ戻ることができます。  
+どちらのモードも左上のボタンでロビー画面へ戻ることができます。
 
 ## 今後の実装予定
 
 ゲームについて 3vs3対応,キャラクター追加,スピードアップ・スピードダウンスキル追加 等  
-システムについて レンタルサーバとデータベースを利用した通信機能追加 等  
+システムについて レンタルサーバとデータベースを利用した通信機能追加 等
 
 ## ライブラリや参考にしたプログラム
 
 オンライン化にあたり、Photon Unity Networking2(PUN2)というUnityパッケージを使用してます。  
-主に、書籍「作って学べるUnity本格入門」を参考にしました。  
+主に、書籍「作って学べるUnity本格入門」を参考にしました。
 
 ## 使用ソフト
 
@@ -132,11 +156,11 @@ Joystick Pack, DOTween(HOTween v2), PUN2-FREE アセットが必要です。ま�
 - krita  
 - domino  
 - audacity  
-- sourcetree  
+- sourcetree
 
 ## 製作者
 
-socius1076  
+socius1076
 
 ## 連絡先
 

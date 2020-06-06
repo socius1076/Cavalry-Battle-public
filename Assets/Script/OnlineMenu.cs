@@ -22,11 +22,11 @@ public class OnlineMenu : MonoBehaviour
     private bool ActivePanel = false;
     private Pun pun = null;
     private bool StartGame = false;
-    public int MaxTime = 0;
+    [SerializeField] private int MaxTime = 0;
     private bool ReadyGame = false;
-    public int ReadyTime = 0;
-    public bool Finish = false;
-    public int Margin = 0;
+    [SerializeField] private int ReadyTime = 0;
+    private bool Finish = false;
+    [SerializeField] private int Margin = 0;
 
     private void Start()
     {
@@ -183,7 +183,7 @@ public class OnlineMenu : MonoBehaviour
     {
         Audio2d.Instance.Play("Ok");
         pun.playerStatus.LifeGaugeDelete();
-        mainCamera.target = null;
+        mainCamera.Target = null;
         mainCamera.CameraOk = false;
         ActivePanel = false;
         PhotonNetwork.LeaveRoom();

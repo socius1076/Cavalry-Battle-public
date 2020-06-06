@@ -9,21 +9,16 @@ public class PlayerStatus : ObjectStatus, IPunObservable
     [SerializeField] private Renderer rrenderer = null;
     [SerializeField] private ParticleSystem _particleSystem = null;
     [SerializeField] protected Animator rideranimator = null;
+    [SerializeField] private float SkillCoolDown = 0.0f;
     public bool LiveState = true;
-    public bool Hit = false;
+    private bool Hit = false;
     public bool SkillState = false;
     public Pun pun = null;
-    public float SkillCoolDown = 0.0f;
 
     protected override void Start()
     {
         base.Start();
         pun = GameObject.Find("Pun").GetComponent<Pun>();
-        LifeGaugeAdd();
-    }
-
-    public void LifeGaugeAdd()
-    {
         //インスタンスを代入
         LifeGaugeContainer.Instance.Add(this);
     }

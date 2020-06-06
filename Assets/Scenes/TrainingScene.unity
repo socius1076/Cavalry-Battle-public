@@ -2762,7 +2762,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerStatus: {fileID: 0}
-  EnemyPrefab: {fileID: 1639059134674551179, guid: a6427d234a557e64db9d8a724c8f568d,
+  EnemyPrefab: {fileID: 7242961471972761429, guid: a6427d234a557e64db9d8a724c8f568d,
     type: 3}
   EnemyCount: 0
 --- !u!4 &1294400039

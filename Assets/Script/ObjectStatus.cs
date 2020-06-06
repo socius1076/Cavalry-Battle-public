@@ -11,8 +11,8 @@ public abstract class ObjectStatus : MonoBehaviourPunCallbacks
         Idle
     }
     public float NowLife = 0.0f;
-    public float MaxLife = 5.0f;
-    public float Attack = 1.0f;
+    public float MaxLife = 0.0f;
+    public float AttackPower = 0.0f;
     protected Animator animator = null;
     //初期状態
     public StateEnum stateEnum = StateEnum.Normal;

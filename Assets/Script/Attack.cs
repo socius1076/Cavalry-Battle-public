@@ -7,7 +7,7 @@ using Photon.Pun;
 public class Attack : MonoBehaviourPunCallbacks
 {
     [SerializeField] private float AttackCoolDown = 0.0f;
-    [SerializeField] private float IdelCoolDown = 0.0f;
+    [SerializeField] private float IdleCoolDown = 0.0f;
     [SerializeField] private Collider OnRideColl = null;
     [SerializeField] private Collider SkillColl = null;
     [SerializeField] private Collider RiderColl = null;
@@ -28,7 +28,6 @@ public class Attack : MonoBehaviourPunCallbacks
     {
         if(!objectStatus.AttackAble) return;
         objectStatus.GoAttack(signal);
-        
     }
     
     public void AttackRangeEnter(Collider collider)
@@ -39,7 +38,7 @@ public class Attack : MonoBehaviourPunCallbacks
         StartCoroutine(StartCooldown());
     }
 
-    private void AttackStart()
+    public void AttackStart()
     {
         OnRideColl.enabled = true;
         if(AttackSound != null)
@@ -48,13 +47,13 @@ public class Attack : MonoBehaviourPunCallbacks
         }
     }
 
-    private void FinishAttack()
+    public void AttackFinish()
     {
         OnRideColl.enabled = false;
-        StartCoroutine(CooldownCoroutine());
+        StartCoroutine(FinishCooldown());
     }
 
-    private void SkillStart()
+    public void SkillStart()
     {
         SkillColl.enabled = true;
         _particleSystem.Play();
@@ -64,12 +63,12 @@ public class Attack : MonoBehaviourPunCallbacks
         }
     }
 
-    private void SkillFinish()
+    public void SkillFinish()
     {
         SkillColl.enabled = false;
     }
 
-     public void RiderAttackStart()
+    public void RiderAttackStart()
     {
         RiderColl.enabled = true;
         if(AttackSound != null)
@@ -78,14 +77,14 @@ public class Attack : MonoBehaviourPunCallbacks
         }
     }
 
-    public void FinishRiderAttack()
+    public void RiderAttackFinish()
     {
         RiderColl.enabled = false;
-        StartCoroutine(CooldownCoroutine());
+        StartCoroutine(FinishCooldown());
     }
 
     //ダメージ処理
-    public void HitAttack(Collider collider)
+    public void AttackHit(Collider collider)
     {
         //プレイヤーの場合
         if(objectStatus.CompareTag("Player"))
@@ -100,7 +99,7 @@ public class Attack : MonoBehaviourPunCallbacks
                 {
                     ObjectStatus Target = collider.GetComponent<ObjectStatus>();
                     if(Target == null) return;
-                    Target.Damage(objectStatus.Attack);
+                    Target.Damage(objectStatus.AttackPower);
                 }
             }
             //トレーニングモードの場合
@@ -108,7 +107,7 @@ public class Attack : MonoBehaviourPunCallbacks
             {
                 ObjectStatus Target = collider.GetComponent<ObjectStatus>();
                 if(Target == null) return;
-                Target.Damage(objectStatus.Attack);
+                Target.Damage(objectStatus.AttackPower);
             }
         }
         //敵の場合
@@ -116,7 +115,7 @@ public class Attack : MonoBehaviourPunCallbacks
         {
             ObjectStatus Target = collider.GetComponent<ObjectStatus>();
             if(Target == null) return;
-            Target.Damage(objectStatus.Attack);
+            Target.Damage(objectStatus.AttackPower);
         }
     }
 
@@ -125,10 +124,10 @@ public class Attack : MonoBehaviourPunCallbacks
         HuntColl.enabled = true;
     }
 
-    public void FinishHunt()
+    public void HuntFinish()
     {
         HuntColl.enabled = false;
-        StartCoroutine(CooldownCoroutine());
+        StartCoroutine(FinishCooldown());
     }
 
     //旗を奪うことに成功した場合に呼ばれる
@@ -163,12 +162,12 @@ public class Attack : MonoBehaviourPunCallbacks
     private IEnumerator StartCooldown()
     {
         objectStatus.GoIdle();
-        yield return new WaitForSeconds(IdelCoolDown);
+        yield return new WaitForSeconds(IdleCoolDown);
         objectStatus.GoNormal();
         AttackIfPossible(0);
     }
 
-    private IEnumerator CooldownCoroutine()
+    private IEnumerator FinishCooldown()
     {
         yield return new WaitForSeconds(AttackCoolDown);
         objectStatus.GoNormal();

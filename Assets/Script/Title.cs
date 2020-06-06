@@ -7,8 +7,7 @@ public class Title : MonoBehaviour
     [SerializeField] private Text text = null;
     [SerializeField] private Button button = null;
     [SerializeField] private Pun pun = null;
-    //参照用変数
-    public string playername = null;
+    [SerializeField] private string playername = null;
 
     private void Start()
     {
