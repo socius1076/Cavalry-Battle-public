@@ -158,6 +158,13 @@ Joystick Pack, DOTween(HOTween v2), PUN2-FREE アセットが必要です。ま�
 - audacity  
 - sourcetree
 
+## 権利表記
+
+Script一部  
+Copyright (c) 2020 Akihito Kako  
+Released under the MIT license  
+[https://github.com/akako/honkaku_unity/blob/master/LICENS](https://github.com/akako/honkaku_unity/blob/master/LICENSE)
+
 ## 製作者
 
 socius1076
